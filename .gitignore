@@ -1,0 +1,18 @@
+# dependencies
+node_modules/
+
+# vite build temp rollback files
+*.timestamp-*.mjs
+
+# source code backups kept on disk
+src.bak-*/
+
+# WorkBuddy project-local data (memory/state)
+.workbuddy/
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# build output (regenerate via npm run build)
+dist/
