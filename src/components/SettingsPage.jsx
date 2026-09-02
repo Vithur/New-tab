@@ -92,7 +92,7 @@ const NAV_TABS = [
   { id: "songPlayer", label: "播放器", icon: "ri-music-2-line" },
   { id: "taskbar", label: "Dock栏", icon: "ri-external-link-line" },
   { id: "tabs", label: "收藏夹", icon: "ri-bookmark-3-line" },
-  { id: "timebox", label: "日历订阅", icon: "ri-calendar-line" },
+  { id: "timebox", label: "日历", icon: "ri-calendar-line" },
   { id: "rss", label: "新消息", icon: "ri-rss-line" },
   { id: "carousel", label: "照片", icon: "ri-image-line" },
   { id: "ha", label: "家庭", icon: "ri-home-gear-line" },
@@ -1091,7 +1091,7 @@ const SongPlayerTab = ({
           <div className="flex items-center justify-between">
             <div>
               <span className="text-white/90 text-xs font-gilroy-medium">默认音量</span>
-              <p className="text-white/50 text-[11px] font-gilroy-medium">小组件内也可随时调节</p>
+              <p className="text-white/50 text-[11px] font-gilroy-medium">同时控制待机音频与钢琴视频音量</p>
             </div>
             <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 text-xs font-mono font-bold text-white">
               {lofiVolume}%
