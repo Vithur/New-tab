@@ -1091,7 +1091,7 @@ const SongPlayerTab = ({
           <div className="flex items-center justify-between">
             <div>
               <span className="text-white/90 text-xs font-gilroy-medium">默认音量</span>
-              <p className="text-white/50 text-[11px] font-gilroy-medium">同时控制待机音频与钢琴视频音量</p>
+              <p className="text-white/50 text-[11px] font-gilroy-medium">控制视频播放与背景音频的音量</p>
             </div>
             <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 text-xs font-mono font-bold text-white">
               {lofiVolume}%
