@@ -425,16 +425,14 @@ const SongPlayer = ({
         </div>
 
         <div
-          className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-transparent hover:border-white/30 text-white opacity-45 hover:opacity-80 transition-colors shrink-0 shadow-sm"
-          style={{ backgroundColor: "rgba(15, 23, 42, 0.6)" }}
+          className="song-rest-badge flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/15 hover:border-white/30 transition-colors shrink-0 shadow-sm"
         >
           <span
-            className={`w-2.5 h-2.5 rounded-full border border-white/60 transition-all ${
+            className={`song-rest-dot w-2.5 h-2.5 rounded-full border border-white/60 transition-all ${
               isPlaying ? "animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]" : "opacity-50"
             }`}
-            style={{ backgroundColor: "rgba(255,255,255,0.85)" }}
           />
-          <span className="text-[10.5px] font-gilroy-bold text-white tracking-wide uppercase">
+          <span className="text-[10.5px] font-gilroy-bold tracking-wide uppercase song-rest-label">
             {statusLabel}
           </span>
         </div>
@@ -497,29 +495,29 @@ const SongPlayer = ({
 
         <div className="flex flex-col items-center justify-center gap-2.5 shrink-0">
           <button type="button" onClick={goPrev}
-            className="h-8 w-8 rounded-full border border-transparent hover:border-white/30 flex items-center justify-center text-white opacity-45 hover:opacity-80 transition-all duration-300 cursor-pointer active:scale-95 shadow-sm"
-            style={{ backgroundColor: "rgba(15, 23, 42, 0.6)" }} title="上一个 / 换一页">
+            className="song-ctrl-btn h-8 w-8 rounded-full border border-white/15 hover:border-white/30 flex items-center justify-center opacity-45 hover:opacity-80 transition-all duration-300 cursor-pointer active:scale-95 shadow-sm"
+            title="上一个 / 换一页">
             <i className="ri-skip-back-fill text-xs relative z-10"></i>
           </button>
 
           <button type="button" onClick={togglePlay}
-            className="h-11 w-11 rounded-full border border-transparent hover:border-white/40 flex items-center justify-center text-white opacity-45 hover:opacity-80 transition-all duration-300 cursor-pointer active:scale-95 shadow-md"
-            style={{ backgroundColor: "rgba(15, 23, 42, 0.6)" }} title={isPlaying ? "暂停（恢复待机）" : "播放钢琴视频"}>
+            className="song-ctrl-btn h-11 w-11 rounded-full border border-white/15 hover:border-white/30 flex items-center justify-center opacity-45 hover:opacity-80 transition-all duration-300 cursor-pointer active:scale-95 shadow-md"
+            title={isPlaying ? "暂停（恢复待机）" : "播放钢琴视频"}>
             {isBuffering
-              ? <i className="ri-loader-4-line text-lg animate-spin text-white relative z-10" />
+              ? <i className="ri-loader-4-line text-lg animate-spin relative z-10" />
               : <i className={`${isPlaying ? "ri-pause-fill" : "ri-play-fill ml-0.5"} text-lg relative z-10`} />}
           </button>
 
           <button type="button" onClick={goNext}
-            className="h-8 w-8 rounded-full border border-transparent hover:border-white/30 flex items-center justify-center text-white opacity-45 hover:opacity-80 transition-all duration-300 cursor-pointer active:scale-95 shadow-sm"
-            style={{ backgroundColor: "rgba(15, 23, 42, 0.6)" }} title="下一个 / 换一页">
+            className="song-ctrl-btn h-8 w-8 rounded-full border border-white/15 hover:border-white/30 flex items-center justify-center opacity-45 hover:opacity-80 transition-all duration-300 cursor-pointer active:scale-95 shadow-sm"
+            title="下一个 / 换一页">
             <i className="ri-skip-forward-fill text-xs relative z-10"></i>
           </button>
 
           <div className="relative flex items-center">
             <button type="button" onClick={toggleMute}
-              className="h-8 w-8 rounded-full border border-transparent hover:border-white/30 flex items-center justify-center text-white opacity-45 hover:opacity-80 transition-all duration-300 cursor-pointer active:scale-95 shadow-sm"
-              style={{ backgroundColor: "rgba(15, 23, 42, 0.6)" }} title={standbyMuted ? "取消静音待机音频" : "静音待机音频"}>
+              className="song-ctrl-btn h-8 w-8 rounded-full border border-white/15 hover:border-white/30 flex items-center justify-center opacity-45 hover:opacity-80 transition-all duration-300 cursor-pointer active:scale-95 shadow-sm"
+              title={standbyMuted ? "取消静音待机音频" : "静音待机音频"}>
               <i className={`${standbyMuted ? "ri-volume-mute-line" : "ri-volume-up-line"} text-sm relative z-10`}></i>
             </button>
           </div>
