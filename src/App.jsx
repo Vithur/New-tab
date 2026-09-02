@@ -453,7 +453,7 @@ const App = () => {
     document.documentElement.style.setProperty("--theme-4", colors[3]);
     document.documentElement.style.setProperty("--theme", colors[2]);
     document.documentElement.style.setProperty("--theme-text", activeTextColor);
-    document.documentElement.style.setProperty("--accent", "#38BDF8");
+    document.documentElement.style.setProperty("--accent", colors[1] ?? colors[0]);
   }, [themeColor, themeTextColorIndex]);
 
   /* ── Background — uses the wallpaper bound to the *current* theme ── */
