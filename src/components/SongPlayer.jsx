@@ -425,12 +425,12 @@ const SongPlayer = ({
         </div>
 
         <div
-          className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-transparent hover:border-white/30 text-white opacity-45 hover:opacity-80 transition-all duration-300 shrink-0 shadow-sm"
+          className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-transparent hover:border-white/30 text-white shrink-0 shadow-sm transition-colors"
           style={{ backgroundColor: "var(--theme-4, #0F172A)" }}
         >
           <span
             className={`w-2.5 h-2.5 rounded-full border border-white/60 transition-all ${
-              isPlaying ? "animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]" : "opacity-40"
+              isPlaying ? "animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]" : "opacity-50"
             }`}
             style={{ backgroundColor: "var(--theme-4, #0F172A)" }}
           />
