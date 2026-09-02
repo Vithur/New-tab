@@ -1,0 +1,229 @@
+{
+  "videos": [
+    {
+      "name": "A_R1_1200.mp4",
+      "url": "/media/video/A_R1_1200.mp4",
+      "state": "A",
+      "type": "loop",
+      "timecode": "1200"
+    },
+    {
+      "name": "A_R1_1730.mp4",
+      "url": "/media/video/A_R1_1730.mp4",
+      "state": "A",
+      "type": "loop",
+      "timecode": "1730"
+    },
+    {
+      "name": "A_R1_2000.mp4",
+      "url": "/media/video/A_R1_2000.mp4",
+      "state": "A",
+      "type": "loop",
+      "timecode": "2000"
+    },
+    {
+      "name": "A_Transition_1200_1730.mp4",
+      "url": "/media/video/A_Transition_1200_1730.mp4",
+      "state": "A",
+      "type": "transition",
+      "from": "1200",
+      "to": "1730"
+    },
+    {
+      "name": "A_Transition_1730_2000.mp4",
+      "url": "/media/video/A_Transition_1730_2000.mp4",
+      "state": "A",
+      "type": "transition",
+      "from": "1730",
+      "to": "2000"
+    },
+    {
+      "name": "A_Transition_2000_1200.mp4",
+      "url": "/media/video/A_Transition_2000_1200.mp4",
+      "state": "A",
+      "type": "transition",
+      "from": "2000",
+      "to": "1200"
+    },
+    {
+      "name": "B_R1_1200.mp4",
+      "url": "/media/video/B_R1_1200.mp4",
+      "state": "B",
+      "type": "loop",
+      "timecode": "1200"
+    },
+    {
+      "name": "B_R1_1730.mp4",
+      "url": "/media/video/B_R1_1730.mp4",
+      "state": "B",
+      "type": "loop",
+      "timecode": "1730"
+    },
+    {
+      "name": "B_R1_2000.mp4",
+      "url": "/media/video/B_R1_2000.mp4",
+      "state": "B",
+      "type": "loop",
+      "timecode": "2000"
+    },
+    {
+      "name": "B_Transition_1200_1730.mp4",
+      "url": "/media/video/B_Transition_1200_1730.mp4",
+      "state": "B",
+      "type": "transition",
+      "from": "1200",
+      "to": "1730"
+    },
+    {
+      "name": "B_Transition_1730_2000.mp4",
+      "url": "/media/video/B_Transition_1730_2000.mp4",
+      "state": "B",
+      "type": "transition",
+      "from": "1730",
+      "to": "2000"
+    },
+    {
+      "name": "B_Transition_2000_1200.mp4",
+      "url": "/media/video/B_Transition_2000_1200.mp4",
+      "state": "B",
+      "type": "transition",
+      "from": "2000",
+      "to": "1200"
+    },
+    {
+      "name": "C_R1_1200.mp4",
+      "url": "/media/video/C_R1_1200.mp4",
+      "state": "C",
+      "type": "loop",
+      "timecode": "1200"
+    },
+    {
+      "name": "C_R1_1730.mp4",
+      "url": "/media/video/C_R1_1730.mp4",
+      "state": "C",
+      "type": "loop",
+      "timecode": "1730"
+    },
+    {
+      "name": "C_R1_2000.mp4",
+      "url": "/media/video/C_R1_2000.mp4",
+      "state": "C",
+      "type": "loop",
+      "timecode": "2000"
+    },
+    {
+      "name": "C_Transition_1200_1730.mp4",
+      "url": "/media/video/C_Transition_1200_1730.mp4",
+      "state": "C",
+      "type": "transition",
+      "from": "1200",
+      "to": "1730"
+    },
+    {
+      "name": "C_Transition_1730_2000.mp4",
+      "url": "/media/video/C_Transition_1730_2000.mp4",
+      "state": "C",
+      "type": "transition",
+      "from": "1730",
+      "to": "2000"
+    },
+    {
+      "name": "C_Transition_2000_1200.mp4",
+      "url": "/media/video/C_Transition_2000_1200.mp4",
+      "state": "C",
+      "type": "transition",
+      "from": "2000",
+      "to": "1200"
+    }
+  ],
+  "audios": [
+    {
+      "name": "ambient_loop_1.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_1.mp3"
+    },
+    {
+      "name": "ambient_loop_2.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_2.mp3"
+    },
+    {
+      "name": "ambient_loop_3.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_3.mp3"
+    },
+    {
+      "name": "ambient_loop_4.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_4.mp3"
+    },
+    {
+      "name": "ambient_loop_5.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_5.mp3"
+    },
+    {
+      "name": "ambient_loop_6.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_6.mp3"
+    },
+    {
+      "name": "ambient_loop_7.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_7.mp3"
+    },
+    {
+      "name": "ambient_loop_8.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_8.mp3"
+    },
+    {
+      "name": "ambient_loop_9.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_9.mp3"
+    },
+    {
+      "name": "ambient_loop_10.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_10.mp3"
+    },
+    {
+      "name": "ambient_loop_11.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_11.mp3"
+    },
+    {
+      "name": "ambient_loop_12.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_12.mp3"
+    },
+    {
+      "name": "ambient_loop_13.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_13.mp3"
+    },
+    {
+      "name": "ambient_loop_14.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_14.mp3"
+    },
+    {
+      "name": "ambient_loop_15.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_15.mp3"
+    },
+    {
+      "name": "ambient_loop_16.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_16.mp3"
+    },
+    {
+      "name": "ambient_loop_17.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_17.mp3"
+    },
+    {
+      "name": "ambient_loop_18.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_18.mp3"
+    },
+    {
+      "name": "ambient_loop_19.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_19.mp3"
+    },
+    {
+      "name": "ambient_loop_20.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_20.mp3"
+    },
+    {
+      "name": "ambient_loop_21.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_21.mp3"
+    },
+    {
+      "name": "ambient_loop_22.mp3",
+      "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/audio/ambient_loop_22.mp3"
+    }
+  ]
+}
