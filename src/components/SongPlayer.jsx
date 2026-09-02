@@ -425,7 +425,7 @@ const SongPlayer = ({
         </div>
 
         <div
-          className="song-rest-badge flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/15 hover:border-white/30 transition-colors shrink-0 shadow-sm"
+          className="song-rest-badge opacity-70 flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/15 hover:border-white/30 hover:opacity-85 transition-colors shrink-0 shadow-sm"
         >
           <span
             className={`song-rest-dot w-2.5 h-2.5 rounded-full border border-white/60 transition-all ${
