@@ -1,0 +1,28 @@
+/* Newly associated CJK display fonts (Task #2).
+   Files live in /public/fonts so Vite emits them to the extension root.
+   - 小米  MiSans            -> MiSans-Regular.ttf
+   - 鸿蒙  HarmonyOS Sans SC -> HarmonyOS-SansSC-Regular.ttf
+   - 得意黑 Smiley Sans      -> SmileySans-Oblique.ttf
+   苹方 (PingFang SC) is an Apple system font and cannot be embedded; it is
+   registered in utils/fonts.js as a system-family fallback only. */
+@font-face {
+  font-family: "MiSans";
+  src: url(/fonts/MiSans-Regular.ttf) format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "HarmonyOS Sans SC";
+  src: url(/fonts/HarmonyOS-SansSC-Regular.ttf) format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Smiley Sans";
+  src: url(/fonts/SmileySans-Oblique.ttf) format("truetype");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
