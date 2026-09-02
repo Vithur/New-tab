@@ -1,0 +1,66 @@
+{
+  "manifest_version": 3,
+  "name": "Project OS",
+  "version": "1.0.0",
+  "description": "Futuristic all-in-one customizable new tab workspace and productivity operating system.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "project-os-workspace@antigravity",
+      "strict_min_version": "115.0"
+    }
+  },
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "declarativeNetRequest"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  "host_permissions": [
+    "https://*.youtube.com/*",
+    "https://*.youtube-nocookie.com/*",
+    "https://*.googlevideo.com/*",
+    "https://noembed.com/*",
+    "https://music.youtube.com/*",
+    "https://api.open-meteo.com/*",
+    "https://api.github.com/*",
+    "https://github.com/*",
+    "https://github-contributions-api.jogruber.de/*",
+    "https://*.spotify.com/*",
+    "https://streams.ilovemusic.de/*",
+    "https://*.zeno.fm/*",
+    "https://*.laut.fm/*",
+    "https://streams.fluxfm.de/*",
+    "https://*.pinimg.com/*",
+    "https://aihot.virxact.com/*",
+    "https://raw.githubusercontent.com/*",
+    "https://cdn.jsdelivr.net/*",
+    "https://corsproxy.io/*",
+    "https://api.allorigins.win/*",
+    "http://192.168.1.42:8123/*",
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "icons": {
+    "16": "images/logo.png",
+    "48": "images/logo.png",
+    "128": "images/logo.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; base-uri 'self'; img-src 'self' data: https: http://192.168.1.42:* blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.jsdelivr.net data:; connect-src 'self' https: http://192.168.1.42:* http://localhost:* http://127.0.0.1:*; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://music.youtube.com https://open.spotify.com; media-src 'self' data: blob: https:;"
+  }
+}
