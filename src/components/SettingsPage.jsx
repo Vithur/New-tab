@@ -141,8 +141,8 @@ const Pill = ({ active, onClick, children }) => (
     onClick={onClick}
     className={`px-4 py-1.5 rounded-full text-xs font-gilroy-medium transition-all active:scale-95 cursor-pointer border ${
       active
-        ? "bg-[color:var(--accent)] text-black font-gilroy-bold border-[color:var(--accent)] shadow-md scale-105"
-        : "bg-[color:var(--accent)]/20 hover:bg-[color:var(--accent)]/35 text-white border-white/15"
+        ? "bg-[color:var(--accent)] text-[color:var(--theme-text,#fff)] font-gilroy-bold border-[color:var(--accent)] shadow-md scale-105"
+        : "bg-[color:var(--accent)]/20 hover:bg-[color:var(--accent)]/35 text-[color:var(--theme-text,#fff)] border-white/15"
     }`}
   >
     {children}
@@ -156,7 +156,7 @@ const OptionButton = ({ active, onClick, children, className = "" }) => (
     onClick={onClick}
     className={`px-3 py-1 rounded-full text-xs font-gilroy-bold transition-all cursor-pointer border ${
       active
-        ? "bg-[color:var(--accent)] border-[color:var(--accent)] text-black shadow-md scale-105"
+        ? "bg-[color:var(--accent)] border-[color:var(--accent)] text-[color:var(--theme-text,#fff)] shadow-md scale-105"
         : "bg-black/30 border-white/10 text-white/70 hover:text-white hover:border-white/30"
     } ${className}`}
   >
@@ -208,7 +208,7 @@ const RingtoneRow = ({ label, value, onChange }) => {
         <button
           type="button"
           onClick={() => previewRingtone(value)}
-          className="h-8 w-8 rounded-full bg-[color:var(--accent)]/25 hover:bg-[color:var(--accent)]/45 border border-white/20 flex items-center justify-center text-white/90 hover:text-white transition-all active:scale-95 cursor-pointer shrink-0"
+          className="h-8 w-8 rounded-full bg-[color:var(--accent)]/25 hover:bg-[color:var(--accent)]/45 border border-white/20 flex items-center justify-center text-[color:var(--theme-text,#fff)]/90 hover:text-[color:var(--theme-text,#fff)] transition-all active:scale-95 cursor-pointer shrink-0"
           title="试听"
         >
           <i className="ri-volume-up-line text-sm relative z-10" />
@@ -275,7 +275,7 @@ const IconPickerModal = ({ current, onSelect, onClose }) => {
               onClick={() => setActiveCategory(cat.id)}
               className={`px-3 py-1.5 rounded-xl text-[11px] font-gilroy-medium whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 border ${
                 activeCategory === cat.id
-                  ? "bg-[color:var(--accent)] border-white/40 text-black font-gilroy-bold shadow-md"
+                  ? "bg-[color:var(--accent)] border-white/40 text-[color:var(--theme-text,#fff)] font-gilroy-bold shadow-md"
                   : "bg-black/40 border-white/15 text-white/70 hover:text-white hover:bg-white/15"
               }`}
             >
@@ -297,8 +297,8 @@ const IconPickerModal = ({ current, onSelect, onClose }) => {
               }}
               className={`h-11 w-11 rounded-2xl flex items-center justify-center text-xl transition-all cursor-pointer border ${
                 item.class === current
-                  ? "bg-[color:var(--accent)] border-white/50 text-black font-bold shadow-md scale-105"
-                  : "bg-black/40 border-white/15 text-white/80 hover:text-white hover:bg-[color:var(--accent)]/30 hover:border-white/30 hover:scale-105"
+                  ? "bg-[color:var(--accent)] border-white/50 text-[color:var(--theme-text,#fff)] font-bold shadow-md scale-105"
+                  : "bg-black/40 border-white/15 text-[color:var(--theme-text,#fff)]/80 hover:text-[color:var(--theme-text,#fff)] hover:bg-[color:var(--accent)]/30 hover:border-white/30 hover:scale-105"
               }`}
               title={`${item.class} (${item.keywords})`}
             >
@@ -508,7 +508,7 @@ const AppearanceTab = ({
             <button
               type="button"
               onClick={() => wallpaperInputRef.current?.click()}
-              className="px-4 py-2 rounded-full bg-[color:var(--accent)] hover:opacity-90 border border-white/20 text-xs text-black font-gilroy-medium cursor-pointer transition-all active:scale-95 shadow-sm"
+              className="px-4 py-2 rounded-full bg-[color:var(--accent)] hover:opacity-90 border border-white/20 text-xs text-[color:var(--theme-text,#fff)] font-gilroy-medium cursor-pointer transition-all active:scale-95 shadow-sm"
             >
               上传媒体
             </button>
@@ -604,7 +604,7 @@ const AppearanceTab = ({
                   setUrlInput("");
                 }
               }}
-              className="px-4 py-2 rounded-full bg-[color:var(--accent)] hover:opacity-90 border border-white/20 text-xs text-black font-gilroy-medium cursor-pointer transition-all active:scale-95 shrink-0"
+              className="px-4 py-2 rounded-full bg-[color:var(--accent)] hover:opacity-90 border border-white/20 text-xs text-[color:var(--theme-text,#fff)] font-gilroy-medium cursor-pointer transition-all active:scale-95 shrink-0"
             >
               应用链接
             </button>
@@ -691,7 +691,7 @@ const AppearanceTab = ({
                       ))}
                     </div>
                     {isSelected && (
-                      <span className="px-2.5 py-1 rounded-full bg-[color:var(--accent)] text-black text-[10px] font-gilroy-bold border border-white/30 uppercase tracking-wider shadow-md">
+                      <span className="px-2.5 py-1 rounded-full bg-[color:var(--accent)] text-[color:var(--theme-text,#fff)] text-[10px] font-gilroy-bold border border-white/30 uppercase tracking-wider shadow-md">
                         当前主题
                       </span>
                     )}
@@ -836,7 +836,7 @@ const AppearanceTab = ({
           <div className="p-4 rounded-2xl bg-gradient-to-r from-white/10 via-black/40 to-black/30 border border-white/15 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-inner">
             <div className="flex flex-col gap-1 min-w-0">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full bg-[color:var(--accent)] border border-white/30 text-[10px] font-bold text-black uppercase tracking-wider shadow-md">
+                <span className="px-2.5 py-0.5 rounded-full bg-[color:var(--accent)] border border-white/30 text-[10px] font-bold text-[color:var(--theme-text,#fff)] uppercase tracking-wider shadow-md">
                   当前字体
                 </span>
                 <span className="text-xs text-white/60 font-medium truncate">{baseFont || "Gilroy"}</span>
@@ -885,7 +885,7 @@ const AppearanceTab = ({
                       )}
                     </div>
                     {isSelected && (
-                      <span className="h-5 w-5 rounded-full bg-[color:var(--accent)] flex items-center justify-center text-white shrink-0 ml-1 shadow-sm">
+                      <span className="h-5 w-5 rounded-full bg-[color:var(--accent)] flex items-center justify-center text-[color:var(--theme-text,#fff)] shrink-0 ml-1 shadow-sm">
                         <i className="ri-check-line text-xs font-bold" />
                       </span>
                     )}
@@ -1046,7 +1046,7 @@ const SongPlayerTab = ({
 
             <div className="flex gap-2 mt-1">
               <button type="button" onClick={handleAddRadio}
-                className="flex-1 py-3 rounded-2xl bg-[color:var(--accent)] hover:opacity-90 border border-white/20 text-xs text-black font-gilroy-bold flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.99] shadow-md">
+                className="flex-1 py-3 rounded-2xl bg-[color:var(--accent)] hover:opacity-90 border border-white/20 text-xs text-[color:var(--theme-text,#fff)] font-gilroy-bold flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.99] shadow-md">
                 <i className="ri-cast-line text-base" />
                 <span>添加音频流</span>
               </button>
@@ -1197,7 +1197,7 @@ const CarouselTab = ({ carouselConfig, onCarouselConfigChange }) => {
               type="button"
               onClick={chooseFolder}
               disabled={!supported}
-              className="h-11 px-5 rounded-2xl bg-[color:var(--accent)] hover:opacity-90 text-black text-xs font-gilroy-bold flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-md border border-white/20 shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="h-11 px-5 rounded-2xl bg-[color:var(--accent)] hover:opacity-90 text-[color:var(--theme-text,#fff)] text-xs font-gilroy-bold flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-md border border-white/20 shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <i className="ri-folder-add-line text-sm" />
               选择文件夹
@@ -1246,7 +1246,7 @@ const CarouselTab = ({ carouselConfig, onCarouselConfigChange }) => {
                 onClick={() => update({ intervalSec: v })}
                 className={`px-3 py-1 rounded-full text-xs font-gilroy-bold transition-all cursor-pointer border ${
                   Number(carouselConfig?.intervalSec) === v
-                    ? "bg-[color:var(--accent)] border-[color:var(--accent)] text-black"
+                    ? "bg-[color:var(--accent)] border-[color:var(--accent)] text-[color:var(--theme-text,#fff)]"
                     : "bg-black/30 border-white/10 text-white/60 hover:text-white"
                 }`}
               >
@@ -1265,7 +1265,7 @@ const CarouselTab = ({ carouselConfig, onCarouselConfigChange }) => {
                 onClick={() => update({ fadeMs: v })}
                 className={`px-3 py-1 rounded-full text-xs font-gilroy-bold transition-all cursor-pointer border ${
                   Number(carouselConfig?.fadeMs) === v
-                    ? "bg-[color:var(--accent)] border-[color:var(--accent)] text-black"
+                    ? "bg-[color:var(--accent)] border-[color:var(--accent)] text-[color:var(--theme-text,#fff)]"
                     : "bg-black/30 border-white/10 text-white/60 hover:text-white"
                 }`}
               >
@@ -1391,7 +1391,7 @@ const RssTab = ({ rssConfig, onRssConfigChange }) => {
               <button
                 type="button"
                 onClick={addFeed}
-                className="h-11 px-5 rounded-2xl bg-[color:var(--accent)] hover:opacity-90 text-black text-xs font-gilroy-bold flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-md border border-white/20 shrink-0"
+                className="h-11 px-5 rounded-2xl bg-[color:var(--accent)] hover:opacity-90 text-[color:var(--theme-text,#fff)] text-xs font-gilroy-bold flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-md border border-white/20 shrink-0"
               >
                 <i className="ri-add-line text-sm" />
                 添加订阅
@@ -1421,7 +1421,7 @@ const RssTab = ({ rssConfig, onRssConfigChange }) => {
                   onClick={() => update({ intervalMin: v })}
                   className={`px-3 py-1 rounded-full text-xs font-gilroy-bold transition-all cursor-pointer border ${
                     Number(rssConfig?.intervalMin) === v
-                      ? "bg-[color:var(--accent)] border-[color:var(--accent)] text-black"
+                      ? "bg-[color:var(--accent)] border-[color:var(--accent)] text-[color:var(--theme-text,#fff)]"
                       : "bg-black/30 border-white/10 text-white/60 hover:text-white"
                   }`}
                 >
@@ -1440,7 +1440,7 @@ const RssTab = ({ rssConfig, onRssConfigChange }) => {
                   onClick={() => update({ maxItems: v })}
                   className={`px-3 py-1 rounded-full text-xs font-gilroy-bold transition-all cursor-pointer border ${
                     Number(rssConfig?.maxItems) === v
-                      ? "bg-[color:var(--accent)] border-[color:var(--accent)] text-black"
+                      ? "bg-[color:var(--accent)] border-[color:var(--accent)] text-[color:var(--theme-text,#fff)]"
                       : "bg-black/30 border-white/10 text-white/60 hover:text-white"
                   }`}
                 >
@@ -1566,7 +1566,7 @@ const HaTab = ({ haConfig, onHaConfigChange }) => {
               type="button"
               onClick={test}
               disabled={testing}
-              className="h-11 px-5 rounded-2xl bg-[color:var(--accent)] hover:opacity-90 text-black text-xs font-gilroy-bold flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-md border border-white/20 shrink-0 disabled:opacity-50"
+              className="h-11 px-5 rounded-2xl bg-[color:var(--accent)] hover:opacity-90 text-[color:var(--theme-text,#fff)] text-xs font-gilroy-bold flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-md border border-white/20 shrink-0 disabled:opacity-50"
             >
               <i className={testing ? "ri-loader-4-line text-sm animate-spin" : "ri-links-line text-sm"} />
               测试连接
@@ -1600,7 +1600,7 @@ const HaTab = ({ haConfig, onHaConfigChange }) => {
                 className={`text-[11px] font-gilroy-bold px-3 py-1.5 rounded-full border transition-all cursor-pointer active:scale-95 ${
                   allSelected
                     ? "bg-white/15 hover:bg-white/25 border-white/30 text-white"
-                    : "bg-[color:var(--accent)]/20 hover:bg-[color:var(--accent)]/30 border-white/20 text-white"
+                    : "bg-[color:var(--accent)]/20 hover:bg-[color:var(--accent)]/30 border-white/20 text-[color:var(--theme-text,#fff)]"
                 }`}
               >
                 {allSelected ? "取消全选" : "全选"}
@@ -1646,7 +1646,7 @@ const HaTab = ({ haConfig, onHaConfigChange }) => {
                 onClick={() => update({ intervalSec: v })}
                 className={`px-3 py-1 rounded-full text-xs font-gilroy-bold transition-all cursor-pointer border ${
                   Number(haConfig?.intervalSec) === v
-                    ? "bg-[color:var(--accent)] border-[color:var(--accent)] text-black"
+                    ? "bg-[color:var(--accent)] border-[color:var(--accent)] text-[color:var(--theme-text,#fff)]"
                     : "bg-black/30 border-white/10 text-white/60 hover:text-white"
                 }`}
               >
@@ -1716,7 +1716,7 @@ const TaskbarTab = ({
           <button
             type="button"
             onClick={onShortcutAdd}
-            className="px-3.5 py-2 rounded-2xl bg-[color:var(--accent)] hover:brightness-110 text-black font-gilroy-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-md whitespace-nowrap shrink-0"
+            className="px-3.5 py-2 rounded-2xl bg-[color:var(--accent)] hover:brightness-110 text-[color:var(--theme-text,#fff)] font-gilroy-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-md whitespace-nowrap shrink-0"
           >
             <i className="ri-add-line text-sm relative z-10" />
             <span className="relative z-10">添加快捷方式</span>
@@ -1764,7 +1764,7 @@ const TaskbarTab = ({
                         e.stopPropagation();
                         setIconPickerShortcutId(iconPickerShortcutId === s.id ? null : s.id);
                       }}
-                      className="h-10 w-10 rounded-2xl bg-[color:var(--accent)]/20 hover:bg-[color:var(--accent)]/40 border border-white/20 flex items-center justify-center text-white transition-all cursor-pointer shrink-0 group/ic active:scale-95 shadow-inner"
+                      className="h-10 w-10 rounded-2xl bg-[color:var(--accent)]/20 hover:bg-[color:var(--accent)]/40 border border-white/20 flex items-center justify-center text-[color:var(--theme-text,#fff)] transition-all cursor-pointer shrink-0 group/ic active:scale-95 shadow-inner"
                       title="更换图标"
                     >
                       {s.iconDataUrl || s.iconUrl ? (
@@ -1963,7 +1963,7 @@ const ImportantTabsTab = ({ _showImportantTabs, _onShowImportantTabsChange, impo
                         e.stopPropagation();
                         setIconPickerTabId(iconPickerTabId === tab.id ? null : tab.id);
                       }}
-                      className="h-10 w-10 rounded-2xl bg-[color:var(--accent)]/25 hover:bg-[color:var(--accent)]/45 border border-white/20 flex items-center justify-center text-white text-xl transition-all shrink-0 cursor-pointer active:scale-95 shadow-sm"
+                      className="h-10 w-10 rounded-2xl bg-[color:var(--accent)]/25 hover:bg-[color:var(--accent)]/45 border border-white/20 flex items-center justify-center text-[color:var(--theme-text,#fff)] text-xl transition-all shrink-0 cursor-pointer active:scale-95 shadow-sm"
                       title="更换图标"
                     >
                       {tab.iconClass && (tab.iconClass.startsWith("img:") || tab.iconClass.startsWith("http") || tab.iconClass.startsWith("data:")) ? (
@@ -1997,7 +1997,7 @@ const ImportantTabsTab = ({ _showImportantTabs, _onShowImportantTabsChange, impo
                     <button
                       type="button"
                       onClick={() => setExpandedTabId(expandedTabId === tab.id ? null : tab.id)}
-                      className="h-10 px-3.5 rounded-2xl bg-[color:var(--accent)]/25 hover:bg-[color:var(--accent)]/45 border border-white/20 text-xs text-white/80 hover:text-white cursor-pointer transition-all flex items-center gap-1.5 active:scale-95 shrink-0"
+                      className="h-10 px-3.5 rounded-2xl bg-[color:var(--accent)]/25 hover:bg-[color:var(--accent)]/45 border border-white/20 text-xs text-[color:var(--theme-text,#fff)]/80 hover:text-[color:var(--theme-text,#fff)] cursor-pointer transition-all flex items-center gap-1.5 active:scale-95 shrink-0"
                     >
                       <span className="text-xs font-gilroy-medium">{tab.links?.length || 0} links</span>
                       <i className={`ri-arrow-${expandedTabId === tab.id ? "up" : "down"}-s-line text-sm relative z-10`} />
@@ -2047,7 +2047,7 @@ const ImportantTabsTab = ({ _showImportantTabs, _onShowImportantTabsChange, impo
                     <button
                       type="button"
                       onClick={() => addLink(tab.id)}
-                      className="mt-1.5 self-start px-4 py-1.5 rounded-xl bg-[color:var(--accent)] hover:opacity-90 border border-white/20 text-xs text-black font-gilroy-medium cursor-pointer transition-all flex items-center gap-1.5 active:scale-95 shadow-sm"
+                      className="mt-1.5 self-start px-4 py-1.5 rounded-xl bg-[color:var(--accent)] hover:opacity-90 border border-white/20 text-xs text-[color:var(--theme-text,#fff)] font-gilroy-medium cursor-pointer transition-all flex items-center gap-1.5 active:scale-95 shadow-sm"
                     >
                       <i className="ri-add-line text-xs relative z-10" />
                       <span className="relative z-10">添加链接</span>
@@ -2062,7 +2062,7 @@ const ImportantTabsTab = ({ _showImportantTabs, _onShowImportantTabsChange, impo
         <button
           type="button"
           onClick={addTab}
-          className="w-full py-3 rounded-2xl bg-[color:var(--accent)] hover:opacity-90 border border-white/20 text-xs text-black font-gilroy-bold flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 shadow-md mt-1"
+          className="w-full py-3 rounded-2xl bg-[color:var(--accent)] hover:opacity-90 border border-white/20 text-xs text-[color:var(--theme-text,#fff)] font-gilroy-bold flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 shadow-md mt-1"
         >
           <i className="ri-add-line text-base relative z-10" />
           <span className="relative z-10">添加标签页分组</span>
@@ -2210,7 +2210,7 @@ const CalendarTab = ({ calendarSub, onCalendarSubChange, onShowTimeBoxingChange,
                   try { origin = new URL(url).origin + "/"; } catch {}
                   if (origin) requestAccess(origin);
                 }}
-                className="h-11 px-5 rounded-2xl bg-[color:var(--accent)] hover:opacity-90 text-black text-xs font-gilroy-bold flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-md border border-white/20 shrink-0"
+                className="h-11 px-5 rounded-2xl bg-[color:var(--accent)] hover:opacity-90 text-[color:var(--theme-text,#fff)] text-xs font-gilroy-bold flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-md border border-white/20 shrink-0"
               >
                 <i className="ri-add-line text-sm" />
                 添加订阅
@@ -2243,7 +2243,7 @@ const CalendarTab = ({ calendarSub, onCalendarSubChange, onShowTimeBoxingChange,
                   onClick={() => update({ intervalMin: v })}
                   className={`px-3 py-1 rounded-full text-xs font-gilroy-bold transition-all cursor-pointer border ${
                     Number(calendarSub?.intervalMin) === v
-                      ? "bg-[color:var(--accent)] border-[color:var(--accent)] text-black"
+                      ? "bg-[color:var(--accent)] border-[color:var(--accent)] text-[color:var(--theme-text,#fff)]"
                       : "bg-black/30 border-white/10 text-white/60 hover:text-white"
                   }`}
                 >
@@ -2262,7 +2262,7 @@ const CalendarTab = ({ calendarSub, onCalendarSubChange, onShowTimeBoxingChange,
                   onClick={() => update({ maxEvents: v })}
                   className={`px-3 py-1 rounded-full text-xs font-gilroy-bold transition-all cursor-pointer border ${
                     Number(calendarSub?.maxEvents) === v
-                      ? "bg-[color:var(--accent)] border-[color:var(--accent)] text-black"
+                      ? "bg-[color:var(--accent)] border-[color:var(--accent)] text-[color:var(--theme-text,#fff)]"
                       : "bg-black/30 border-white/10 text-white/60 hover:text-white"
                   }`}
                 >
@@ -2316,7 +2316,7 @@ const WidgetsTab = ({
           ].map((w, idx) => (
             <div key={idx} className="flex items-center justify-between py-3 border-b border-white/5 last:border-0 hover:bg-white/[0.02] px-2 rounded-xl transition-colors">
               <div className="flex items-center gap-3">
-                <div className="h-9 w-9 rounded-xl bg-[color:var(--accent)]/20 border border-white/15 flex items-center justify-center text-white text-base shrink-0 shadow-inner">
+                <div className="h-9 w-9 rounded-xl bg-[color:var(--accent)]/20 border border-white/15 flex items-center justify-center text-[color:var(--theme-text,#fff)] text-base shrink-0 shadow-inner">
                   <i className={`${w.icon} relative z-10`} />
                 </div>
                 <div>
@@ -2335,7 +2335,7 @@ const WidgetsTab = ({
       >
         <div className="flex items-center justify-between py-3 px-2">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-[color:var(--accent)]/20 border border-white/15 flex items-center justify-center text-white text-base shrink-0 shadow-inner">
+            <div className="h-9 w-9 rounded-xl bg-[color:var(--accent)]/20 border border-white/15 flex items-center justify-center text-[color:var(--theme-text,#fff)] text-base shrink-0 shadow-inner">
               <i className="ri-draggable relative z-10" />
             </div>
             <div>
@@ -2497,7 +2497,7 @@ const BackupTab = ({ uiTheme }) => {
       >
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-2xl bg-[color:var(--accent)]/20 border border-white/15 flex items-center justify-center text-white text-lg shrink-0 shadow-inner">
+            <div className="h-10 w-10 rounded-2xl bg-[color:var(--accent)]/20 border border-white/15 flex items-center justify-center text-[color:var(--theme-text,#fff)] text-lg shrink-0 shadow-inner">
               <i className="ri-download-cloud-2-line" />
             </div>
             <div>
@@ -2511,7 +2511,7 @@ const BackupTab = ({ uiTheme }) => {
             type="button"
             onClick={handleExport}
             disabled={isExporting}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-gilroy-bold text-black bg-[color:var(--accent)] hover:opacity-90 border border-white/20 transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95 shadow-md disabled:opacity-50"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-gilroy-bold text-[color:var(--theme-text,#fff)] bg-[color:var(--accent)] hover:opacity-90 border border-white/20 transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95 shadow-md disabled:opacity-50"
           >
             <i className="ri-download-2-line text-sm" />
             <span>{isExporting ? "正在导出…" : "导出备份（.json）"}</span>
@@ -2526,7 +2526,7 @@ const BackupTab = ({ uiTheme }) => {
       >
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-2xl bg-[color:var(--accent)]/20 border border-white/15 flex items-center justify-center text-white text-lg shrink-0 shadow-inner">
+            <div className="h-10 w-10 rounded-2xl bg-[color:var(--accent)]/20 border border-white/15 flex items-center justify-center text-[color:var(--theme-text,#fff)] text-lg shrink-0 shadow-inner">
               <i className="ri-upload-cloud-2-line" />
             </div>
             <div>
