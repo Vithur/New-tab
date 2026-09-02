@@ -28,6 +28,14 @@ const pickRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const BUNDLED_MANIFEST_URL = "/media/manifest.json";
 const BUNDLED_SOURCE_ID = "bundled-ambience";
 
+// ── 网络「弹钢琴动画」：B 站 BV1XfNS6CEAT（实测 68 页单视频）──
+// 播放控件改造后：点击播放 → 随机一页 B 站弹钢琴动画（占位在待机动画处）；
+// 点击暂停 → 恢复本地待机动画 + 待机音频。用官方 embed iframe 规避 CDN 防盗链。
+const BILI_BVID = "BV1XfNS6CEAT";
+const BILI_PAGE_COUNT = 68;
+const biliEmbed = (page) =>
+  `https://player.bilibili.com/player.html?bvid=${BILI_BVID}&page=${page}&autoplay=1&high_quality=1&danmaku=0`;
+
 const SongPlayer = ({
   dragHandleProps,
   musicSources = [],
@@ -36,7 +44,8 @@ const SongPlayer = ({
   onVolumeChange,
 }) => {
   const [sourceIndex, setSourceIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(Boolean(autoPlay));
+  // isPlaying=true → B站弹钢琴模式；false → 本地待机模式（待机动画 + 待机音频）
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
   const [showVolume, setShowVolume] = useState(false);
   const [trackName, setTrackName] = useState("");
@@ -58,6 +67,10 @@ const SongPlayer = ({
   const [bundledIndex, setBundledIndex] = useState(null);
   const [bundledAudios, setBundledAudios] = useState([]);
   const [bundledAudioIdx, setBundledAudioIdx] = useState(0);
+
+  // B站随机页 + 待机音频静音开关（音量滑块改为静音控制）
+  const [biliPage, setBiliPage] = useState(() => Math.floor(Math.random() * BILI_PAGE_COUNT) + 1);
+  const [standbyMuted, setStandbyMuted] = useState(false);
 
   const audioRef = useRef(null);
 
@@ -89,47 +102,13 @@ const SongPlayer = ({
           setBundledIndex(buildVideoIndex(data.videos));
         }
         if (Array.isArray(data.audios)) setBundledAudios(data.audios);
-        // manifest 加载完毕：默认尝试自动播放 bundled 第一首（chrome autoplay 策略下若失败也无害）
         if (Array.isArray(data.audios) && data.audios.length > 0) {
-          setBundledAudioIdx(0);
+          setBundledAudioIdx(Math.floor(Math.random() * data.audios.length));
         }
       } catch {}
     })();
     return () => { cancelled = true; };
   }, []);
-
-  // 默认音乐自动播放：bundled 清单加载完后，若 autoPlay=true 且用户尚未交互，主动触发一次。
-  // 用户主动 togglePlay 后，isPlaying 已被用户掌握，此 effect 不会再覆盖。
-  // 关键：autoPlay 关闭时（无论音频是否因默认 true 已开播），都主动暂停——避免
-  // "默认 true → 音频已播 → 用户关闭 → 音频继续放"的回归。
-  const hasUserInteractedRef = useRef(false);
-  useEffect(() => {
-    if (hasUserInteractedRef.current) return;
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (!autoPlay) {
-      // 关闭自动播放：把仍在自动启动的音频停掉。
-      if (!audio.paused || isPlaying) {
-        audio.pause();
-        setIsPlaying(false);
-        setIsBuffering(false);
-      }
-      return;
-    }
-    if (bundledAudios.length === 0) return;
-    // 只在没有任何"用户添加的源"且我们仍在 bundled 上时启动
-    if (Array.isArray(musicSources) && musicSources.length > 0) return;
-    const firstUrl = bundledAudios[0]?.url;
-    if (!firstUrl) return;
-    if (audio.src === firstUrl && !audio.paused) return;
-    audio.src = firstUrl;
-    audio.load();
-    setIsPlaying(true);
-    setIsBuffering(true);
-    audio.play()
-      .then(() => setIsBuffering(false))
-      .catch(() => { setIsBuffering(false); setIsPlaying(false); });
-  }, [bundledAudios, autoPlay, musicSources]);
 
   useEffect(() => {
     let cancelled = false;
@@ -304,94 +283,58 @@ const SongPlayer = ({
     ? (activeSource.streamUrl || "")
     : (localTracks[localTrackIdx]?.url || "");
 
+  // 待机音频：仅待机模式（暂停）播放；B站模式暂停之。音量仍由 Settings 的 volume 决定。
   useEffect(() => {
     if (!audioRef.current || !currentStreamUrl) return;
     const audio = audioRef.current;
-    // 仅在 src 真正变化时才重新 load，避免续播时（URL 可能相同）被打断重头播放
     if (audio.src !== currentStreamUrl) {
       audio.src = currentStreamUrl;
       audio.load();
     }
-    if (isPlaying) {
-      if (audio.paused) {
-        setIsBuffering(true);
-        audio.play()
-          .then(() => setIsBuffering(false))
-          .catch(() => setIsBuffering(false));
-      }
+    if (!isPlaying) {
+      if (audio.paused) audio.play().catch(() => {});
     } else {
-      audio.pause();
-      setIsBuffering(false);
+      if (!audio.paused) audio.pause();
     }
-    if (!isRadio) {
-      setTrackName(localTracks[localTrackIdx]?.name || "");
-    }
+    if (!isRadio) setTrackName(localTracks[localTrackIdx]?.name || "");
   }, [currentStreamUrl, isRadio, isPlaying]);
 
+  // 音量：实际音量取自 Settings(volume)；滑块改为静音待机音频。
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = Math.min(1, Math.max(0, Number(volume) / 100));
+      audioRef.current.muted = standbyMuted;
     }
-  }, [volume]);
+  }, [volume, standbyMuted]);
 
   const togglePlay = () => {
-    if (!audioRef.current) return;
-    const audio = audioRef.current;
-    hasUserInteractedRef.current = true;
     if (isPlaying) {
-      audio.pause();
-      setIsPlaying(false);
-      setIsBuffering(false);
+      setIsPlaying(false); // → 待机（本地动画 + 待机音频）
     } else {
-      setIsBuffering(true);
-      if (!audio.src || audio.src !== currentStreamUrl) {
-        audio.src = currentStreamUrl;
-        audio.load();
-      }
-      audio.play()
-        .then(() => { setIsBuffering(false); setIsPlaying(true); })
-        .catch(() => { setIsBuffering(false); setIsPlaying(false); });
+      setBiliPage(Math.floor(Math.random() * BILI_PAGE_COUNT) + 1); // 随机一页弹钢琴
+      setIsPlaying(true); // → B站弹钢琴模式
     }
   };
 
-  // 直接续播指定 URL（不依赖播放 effect），保证单曲结束/回绕也能无缝接上下一首
-  const playUrl = (url, name) => {
-    const audio = audioRef.current;
-    if (!audio || !url) return;
-    if (audio.src !== url) {
-      audio.src = url;
-      audio.load();
-    }
-    setIsPlaying(true);
-    setIsBuffering(true);
-    audio.play()
-      .then(() => setIsBuffering(false))
-      .catch(() => setIsBuffering(false));
-    if (name) setTrackName(name);
-  };
-
-  // 用户主动操作（删除/切换源）后再启动下一首，确保切源后也能自动续播
-  const startPlayback = useCallback(() => {
-    if (bundledAudios.length === 0) return;
-    const firstUrl = bundledAudios[bundledAudioIdx]?.url;
-    if (!firstUrl) return;
-    playUrl(firstUrl, bundledAudios[bundledAudioIdx]?.name || "Wallpaper Ambience");
-  }, [bundledAudios, bundledAudioIdx]);
-
+  // 待机音频：单曲结束自动接下一首（不切换 isPlaying 状态）
   const handleAudioEnded = () => {
     if (isRadio) return;
+    const playNext = (url) => {
+      const a = audioRef.current;
+      if (!a || !url) return;
+      if (a.src !== url) { a.src = url; a.load(); }
+      a.play().catch(() => {});
+    };
     if (activeSource?.bundled && bundledAudios.length > 0) {
       const nextIdx = (bundledAudioIdx + 1) % bundledAudios.length;
       setBundledAudioIdx(nextIdx);
-      const next = bundledAudios[nextIdx];
-      playUrl(next?.url || "", next?.name || "Wallpaper Ambience");
+      playNext(bundledAudios[nextIdx]?.url || "");
       return;
     }
     if (localTracks.length > 0) {
       const nextIdx = (localTrackIdx + 1) % localTracks.length;
       setLocalTrackIdx(nextIdx);
-      const next = localTracks[nextIdx];
-      playUrl(next?.url || "", next?.name || "");
+      playNext(localTracks[nextIdx]?.url || "");
     }
   };
 
@@ -405,6 +348,7 @@ const SongPlayer = ({
   };
 
   const goNext = () => {
+    if (isPlaying) { setBiliPage(Math.floor(Math.random() * BILI_PAGE_COUNT) + 1); return; }
     if (isRadio || activeSource.type === "file") {
       changeSource((sourceIndex + 1) % effectiveSources.length);
     } else {
@@ -413,6 +357,7 @@ const SongPlayer = ({
   };
 
   const goPrev = () => {
+    if (isPlaying) { setBiliPage(Math.floor(Math.random() * BILI_PAGE_COUNT) + 1); return; }
     if (isRadio || activeSource.type === "file") {
       changeSource((sourceIndex - 1 + effectiveSources.length) % effectiveSources.length);
     } else {
@@ -420,33 +365,21 @@ const SongPlayer = ({
     }
   };
 
-  const handleVolumeChange = (e) => {
-    const next = Number(e.target.value);
-    if (onVolumeChange) onVolumeChange(next);
-    if (audioRef.current) audioRef.current.volume = next / 100;
-  };
+  const toggleMute = () => setStandbyMuted((m) => !m);
+  const handleMuteSlider = (e) => setStandbyMuted(Number(e.target.value) === 0);
 
-  const displayName = isRadio
-    ? activeSource.name
-    : (trackName || activeSource.name || "本地音乐");
+  // 不播放时标题固定为 Bside Olivia Lin；播放 B站 时显示弹钢琴动画
+  const displayName = isPlaying ? "弹钢琴动画" : "Bside Olivia Lin";
 
-  const statusLabel = isBuffering
-    ? "缓冲中"
-    : isPlaying
-      ? (isRadio ? "直播" : "播放中")
-      : "已暂停";
+  const statusLabel = isPlaying ? "弹钢琴" : "待机";
 
   return (
     <div className={`${WIDGET_SHELL} song-widget`}>
       <audio
         ref={audioRef}
         preload="auto"
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-        onWaiting={() => setIsBuffering(true)}
-        onPlaying={() => setIsBuffering(false)}
         onEnded={handleAudioEnded}
-        onError={() => { setIsBuffering(false); setIsPlaying(false); }}
+        onError={() => { setIsBuffering(false); }}
       />
 
       <div className={WIDGET_HEADER}>
@@ -473,7 +406,16 @@ const SongPlayer = ({
 
       <div className="w-full flex-1 min-h-0 flex items-stretch gap-3 z-10 relative overflow-hidden">
         <div className="flex-1 min-w-0 rounded-2xl overflow-hidden relative border border-white/15 bg-black/70 shadow-xl flex items-center justify-center group">
-          {videoSrc ? (
+          {isPlaying ? (
+            <iframe
+              key={biliPage}
+              src={biliEmbed(biliPage)}
+              title="弹钢琴动画"
+              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full border-0 rounded-2xl"
+            />
+          ) : videoSrc ? (
             <video
               key={videoKey}
               ref={videoRef}
@@ -512,13 +454,13 @@ const SongPlayer = ({
         <div className="flex flex-col items-center justify-center gap-2.5 shrink-0">
           <button type="button" onClick={goPrev}
             className="h-8 w-8 rounded-full border border-transparent hover:border-white/30 flex items-center justify-center text-white opacity-45 hover:opacity-80 transition-all duration-300 cursor-pointer active:scale-95 shadow-sm"
-            style={{ backgroundColor: "var(--theme-4, #0F172A)" }} title="上一个">
+            style={{ backgroundColor: "var(--theme-4, #0F172A)" }} title="上一个 / 换一页">
             <i className="ri-skip-back-fill text-xs relative z-10"></i>
           </button>
 
           <button type="button" onClick={togglePlay}
             className="h-11 w-11 rounded-full border border-transparent hover:border-white/40 flex items-center justify-center text-white opacity-45 hover:opacity-80 transition-all duration-300 cursor-pointer active:scale-95 shadow-md"
-            style={{ backgroundColor: "var(--theme-4, #0F172A)" }} title={isPlaying ? "暂停" : "播放"}>
+            style={{ backgroundColor: "var(--theme-4, #0F172A)" }} title={isPlaying ? "暂停（恢复待机）" : "播放弹钢琴动画"}>
             {isBuffering
               ? <i className="ri-loader-4-line text-lg animate-spin text-white relative z-10" />
               : <i className={`${isPlaying ? "ri-pause-fill" : "ri-play-fill ml-0.5"} text-lg relative z-10`} />}
@@ -526,28 +468,24 @@ const SongPlayer = ({
 
           <button type="button" onClick={goNext}
             className="h-8 w-8 rounded-full border border-transparent hover:border-white/30 flex items-center justify-center text-white opacity-45 hover:opacity-80 transition-all duration-300 cursor-pointer active:scale-95 shadow-sm"
-            style={{ backgroundColor: "var(--theme-4, #0F172A)" }} title="下一个">
+            style={{ backgroundColor: "var(--theme-4, #0F172A)" }} title="下一个 / 换一页">
             <i className="ri-skip-forward-fill text-xs relative z-10"></i>
           </button>
 
           <div className="relative flex items-center">
             {showVolume && (
               <div className="absolute right-full mr-2.5 px-3 py-2 rounded-2xl bg-black/60 backdrop-blur-md border border-white/15 shadow-xl flex items-center gap-2 z-20">
-                <button type="button"
-                  onClick={() => onVolumeChange && onVolumeChange(Number(volume) > 0 ? 0 : 80)}
-                  className="text-white/70 hover:text-white cursor-pointer shrink-0"
-                  title={Number(volume) > 0 ? "静音" : "恢复音量"}>
-                  <i className={`${Number(volume) > 0 ? "ri-volume-up-line" : "ri-volume-mute-line"} text-sm`} />
-                </button>
-                <input type="range" min="0" max="100" value={volume} onChange={handleVolumeChange}
-                  className="w-20 h-1 accent-[color:var(--theme)] cursor-pointer" title={`音量 ${volume}%`} />
-                <span className="text-[10px] text-white/60 font-gilroy-bold w-6 text-right">{volume}</span>
+                <span className="text-[10px] text-white/60 font-gilroy-bold whitespace-nowrap">待机音频</span>
+                <input type="range" min="0" max="1" step="1" value={standbyMuted ? 0 : 1}
+                  onChange={handleMuteSlider}
+                  className="w-16 h-1 accent-[color:var(--theme)] cursor-pointer" title={standbyMuted ? "已静音待机音频" : "待机音频有声"} />
+                <span className="text-[10px] text-white/60 font-gilroy-bold w-8 text-right">{standbyMuted ? "静音" : "有声"}</span>
               </div>
             )}
-            <button type="button" onClick={() => setShowVolume((v) => !v)}
+            <button type="button" onClick={() => { toggleMute(); setShowVolume((v) => !v); }}
               className="h-8 w-8 rounded-full border border-transparent hover:border-white/30 flex items-center justify-center text-white opacity-45 hover:opacity-80 transition-all duration-300 cursor-pointer active:scale-95 shadow-sm"
-              style={{ backgroundColor: "var(--theme-4, #0F172A)" }} title="音量">
-              <i className={`${Number(volume) > 0 ? "ri-volume-up-line" : "ri-volume-mute-line"} text-sm relative z-10`}></i>
+              style={{ backgroundColor: "var(--theme-4, #0F172A)" }} title={standbyMuted ? "取消静音待机音频" : "静音待机音频"}>
+              <i className={`${standbyMuted ? "ri-volume-mute-line" : "ri-volume-up-line"} text-sm relative z-10`}></i>
             </button>
           </div>
         </div>
