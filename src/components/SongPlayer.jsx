@@ -28,13 +28,12 @@ const pickRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const BUNDLED_MANIFEST_URL = "/media/manifest.json";
 const BUNDLED_SOURCE_ID = "bundled-ambience";
 
-// ── 网络「弹钢琴动画」：B 站 BV1XfNS6CEAT（实测 68 页单视频）──
-// 播放控件改造后：点击播放 → 随机一页 B 站弹钢琴动画（占位在待机动画处）；
-// 点击暂停 → 恢复本地待机动画 + 待机音频。用官方 embed iframe 规避 CDN 防盗链。
-const BILI_BVID = "BV1XfNS6CEAT";
-const BILI_PAGE_COUNT = 68;
-const biliEmbed = (page) =>
-  `https://player.bilibili.com/player.html?bvid=${BILI_BVID}&page=${page}&autoplay=1&high_quality=1&danmaku=0`;
+// ── 播放态视频源：YouTube 钢琴演奏（已下压 720p 上传 media 仓库）──
+// 点击播放 → 随机一段钢琴视频；点击暂停 → 恢复本地待机动画 + 待机音频。
+// 清单托管在 media 仓库（CDN 优先，本地打包副本兜底）—— 以后加视频只改仓库，无需重新构建插件
+const PIANO_MANIFEST_URL =
+  "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano_manifest.json";
+const PIANO_MANIFEST_FALLBACK = "/media/piano_manifest.json";
 
 const SongPlayer = ({
   dragHandleProps,
@@ -44,10 +43,9 @@ const SongPlayer = ({
   onVolumeChange,
 }) => {
   const [sourceIndex, setSourceIndex] = useState(0);
-  // isPlaying=true → B站弹钢琴模式；false → 本地待机模式（待机动画 + 待机音频）
+  // isPlaying=true → 钢琴视频模式；false → 本地待机模式（待机动画 + 待机音频）
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
-  const [showVolume, setShowVolume] = useState(false);
   const [trackName, setTrackName] = useState("");
 
   const [localTracks, setLocalTracks] = useState([]);
@@ -68,8 +66,12 @@ const SongPlayer = ({
   const [bundledAudios, setBundledAudios] = useState([]);
   const [bundledAudioIdx, setBundledAudioIdx] = useState(0);
 
-  // B站随机页 + 待机音频静音开关（音量滑块改为静音控制）
-  const [biliPage, setBiliPage] = useState(() => Math.floor(Math.random() * BILI_PAGE_COUNT) + 1);
+  // 钢琴视频随机播放 + 待机音频静音开关
+  const [pianoUrls, setPianoUrls] = useState([]);
+  const [pianoUrl, setPianoUrl] = useState(null);
+  const [pianoName, setPianoName] = useState("");
+  const [pianoKey, setPianoKey] = useState(0);
+  const pianoVideoRef = useRef(null);
   const [standbyMuted, setStandbyMuted] = useState(false);
 
   const audioRef = useRef(null);
@@ -107,6 +109,27 @@ const SongPlayer = ({
         }
       } catch {}
     })();
+    return () => { cancelled = true; };
+  }, []);
+
+  // 加载钢琴视频清单（播放态视频源）
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      for (const url of [PIANO_MANIFEST_URL, PIANO_MANIFEST_FALLBACK]) {
+        try {
+          const res = await fetch(url, { cache: "no-store" });
+          if (!res.ok) continue;
+          const data = await res.json();
+          if (cancelled) return;
+          if (Array.isArray(data.videos) && data.videos.length) {
+            setPianoUrls(data.videos);
+            return;
+          }
+        } catch {}
+      }
+    };
+    load();
     return () => { cancelled = true; };
   }, []);
 
@@ -283,7 +306,7 @@ const SongPlayer = ({
     ? (activeSource.streamUrl || "")
     : (localTracks[localTrackIdx]?.url || "");
 
-  // 待机音频：仅待机模式（暂停）播放；B站模式暂停之。音量仍由 Settings 的 volume 决定。
+  // 待机音频：仅待机模式（暂停）播放；钢琴视频模式暂停之。音量仍由 Settings 的 volume 决定。
   useEffect(() => {
     if (!audioRef.current || !currentStreamUrl) return;
     const audio = audioRef.current;
@@ -307,14 +330,28 @@ const SongPlayer = ({
     }
   }, [volume, standbyMuted]);
 
+  // 随机选一段钢琴视频（尽量不连续重复）
+  const pickPiano = useCallback(() => {
+    if (pianoUrls.length === 0) { setPianoUrl(null); return; }
+    let idx = Math.floor(Math.random() * pianoUrls.length);
+    if (pianoUrls.length > 1 && pianoUrls[idx]?.url === pianoUrl) {
+      idx = (idx + 1) % pianoUrls.length;
+    }
+    setPianoUrl(pianoUrls[idx]?.url || null);
+    setPianoName(pianoUrls[idx]?.name || "钢琴演奏");
+    setPianoKey((k) => k + 1);
+  }, [pianoUrls, pianoUrl]);
+
   const togglePlay = () => {
     if (isPlaying) {
       setIsPlaying(false); // → 待机（本地动画 + 待机音频）
     } else {
-      setBiliPage(Math.floor(Math.random() * BILI_PAGE_COUNT) + 1); // 随机一页弹钢琴
-      setIsPlaying(true); // → B站弹钢琴模式
+      pickPiano(); // 随机一段钢琴视频
+      setIsPlaying(true); // → 钢琴视频模式
     }
   };
+
+  const handlePianoEnded = () => { if (isPlaying) pickPiano(); };
 
   // 待机音频：单曲结束自动接下一首（不切换 isPlaying 状态）
   const handleAudioEnded = () => {
@@ -348,7 +385,7 @@ const SongPlayer = ({
   };
 
   const goNext = () => {
-    if (isPlaying) { setBiliPage(Math.floor(Math.random() * BILI_PAGE_COUNT) + 1); return; }
+    if (isPlaying) { pickPiano(); return; }
     if (isRadio || activeSource.type === "file") {
       changeSource((sourceIndex + 1) % effectiveSources.length);
     } else {
@@ -357,7 +394,7 @@ const SongPlayer = ({
   };
 
   const goPrev = () => {
-    if (isPlaying) { setBiliPage(Math.floor(Math.random() * BILI_PAGE_COUNT) + 1); return; }
+    if (isPlaying) { pickPiano(); return; }
     if (isRadio || activeSource.type === "file") {
       changeSource((sourceIndex - 1 + effectiveSources.length) % effectiveSources.length);
     } else {
@@ -366,12 +403,11 @@ const SongPlayer = ({
   };
 
   const toggleMute = () => setStandbyMuted((m) => !m);
-  const handleMuteSlider = (e) => setStandbyMuted(Number(e.target.value) === 0);
 
-  // 不播放时标题固定为 Bside Olivia Lin；播放 B站 时显示弹钢琴动画
-  const displayName = isPlaying ? "弹钢琴动画" : "Bside Olivia Lin";
+  // 标题：播放中显示视频名，待机仍是「Bside Olivia Lin」；状态位：待机显示「休息中」
+  const displayName = isPlaying ? (pianoName || "钢琴演奏") : "Bside Olivia Lin";
 
-  const statusLabel = isPlaying ? "弹钢琴" : "待机";
+  const statusLabel = isPlaying ? "播放中" : "休息中";
 
   return (
     <div className={`${WIDGET_SHELL} song-widget`}>
@@ -407,14 +443,22 @@ const SongPlayer = ({
       <div className="w-full flex-1 min-h-0 flex items-stretch gap-3 z-10 relative overflow-hidden">
         <div className="flex-1 min-w-0 rounded-2xl overflow-hidden relative border border-white/15 bg-black/70 shadow-xl flex items-center justify-center group">
           {isPlaying ? (
-            <iframe
-              key={biliPage}
-              src={biliEmbed(biliPage)}
-              title="弹钢琴动画"
-              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full border-0 rounded-2xl"
-            />
+            pianoUrl ? (
+              <video
+                key={pianoKey}
+                ref={pianoVideoRef}
+                src={pianoUrl}
+                autoPlay
+                muted={standbyMuted}
+                playsInline
+                onEnded={handlePianoEnded}
+                className="w-full h-full object-cover rounded-2xl"
+              />
+            ) : (
+              <div className="w-full h-full bg-black/70 flex items-center justify-center">
+                <p className="text-white/60 text-xs font-gilroy-medium">正在加载钢琴视频…</p>
+              </div>
+            )
           ) : videoSrc ? (
             <video
               key={videoKey}
@@ -460,7 +504,7 @@ const SongPlayer = ({
 
           <button type="button" onClick={togglePlay}
             className="h-11 w-11 rounded-full border border-transparent hover:border-white/40 flex items-center justify-center text-white opacity-45 hover:opacity-80 transition-all duration-300 cursor-pointer active:scale-95 shadow-md"
-            style={{ backgroundColor: "var(--theme-4, #0F172A)" }} title={isPlaying ? "暂停（恢复待机）" : "播放弹钢琴动画"}>
+            style={{ backgroundColor: "var(--theme-4, #0F172A)" }} title={isPlaying ? "暂停（恢复待机）" : "播放钢琴视频"}>
             {isBuffering
               ? <i className="ri-loader-4-line text-lg animate-spin text-white relative z-10" />
               : <i className={`${isPlaying ? "ri-pause-fill" : "ri-play-fill ml-0.5"} text-lg relative z-10`} />}
@@ -473,16 +517,7 @@ const SongPlayer = ({
           </button>
 
           <div className="relative flex items-center">
-            {showVolume && (
-              <div className="absolute right-full mr-2.5 px-3 py-2 rounded-2xl bg-black/60 backdrop-blur-md border border-white/15 shadow-xl flex items-center gap-2 z-20">
-                <span className="text-[10px] text-white/60 font-gilroy-bold whitespace-nowrap">待机音频</span>
-                <input type="range" min="0" max="1" step="1" value={standbyMuted ? 0 : 1}
-                  onChange={handleMuteSlider}
-                  className="w-16 h-1 accent-[color:var(--theme)] cursor-pointer" title={standbyMuted ? "已静音待机音频" : "待机音频有声"} />
-                <span className="text-[10px] text-white/60 font-gilroy-bold w-8 text-right">{standbyMuted ? "静音" : "有声"}</span>
-              </div>
-            )}
-            <button type="button" onClick={() => { toggleMute(); setShowVolume((v) => !v); }}
+            <button type="button" onClick={toggleMute}
               className="h-8 w-8 rounded-full border border-transparent hover:border-white/30 flex items-center justify-center text-white opacity-45 hover:opacity-80 transition-all duration-300 cursor-pointer active:scale-95 shadow-sm"
               style={{ backgroundColor: "var(--theme-4, #0F172A)" }} title={standbyMuted ? "取消静音待机音频" : "静音待机音频"}>
               <i className={`${standbyMuted ? "ri-volume-mute-line" : "ri-volume-up-line"} text-sm relative z-10`}></i>
