@@ -1,0 +1,69 @@
+{
+  "positions": {
+    "carousel": {
+      "col": 22,
+      "cols": 4,
+      "row": 5,
+      "rows": 3
+    },
+    "haWidget": {
+      "col": 21,
+      "cols": 4,
+      "row": 8,
+      "rows": 2
+    },
+    "importantTabs": {
+      "col": 1,
+      "cols": 3,
+      "row": 4,
+      "rows": 3
+    },
+    "rssReader": {
+      "col": 21,
+      "cols": 4,
+      "row": 3,
+      "rows": 2
+    },
+    "songPlayer": {
+      "col": 1,
+      "cols": 6,
+      "row": 1,
+      "rows": 3
+    },
+    "timeBoxing": {
+      "col": 22,
+      "cols": 4,
+      "row": 1,
+      "rows": 2
+    },
+    "todo": {
+      "col": 4,
+      "cols": 3,
+      "row": 5,
+      "rows": 3
+    }
+  },
+  "heroLayout": "left",
+  "widgetEditMode": true,
+  "themeColorsMap": {
+    "default": [
+      "#CBD5E1",
+      "#64748B",
+      "#334155",
+      "#0F172A"
+    ],
+    "light": [
+      "#1E293B",
+      "#334155",
+      "#2563EB",
+      "#F1F5F9"
+    ]
+  },
+  "themeColor": [
+    "#1E293B",
+    "#334155",
+    "#2563EB",
+    "#F1F5F9"
+  ],
+  "uiTheme": "light"
+}
