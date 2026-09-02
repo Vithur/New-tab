@@ -23,3 +23,14 @@
 [data-theme=light] .ring-white\/40{--tw-ring-color:#0f172a40}
 [data-theme=light] .ring-white\/50{--tw-ring-color:#0f172a59}
 [data-theme=light] .font-heathergreen{background-image:linear-gradient(to bottom,#0f172ae0,#0f172a59)!important}
+
+/* ── SongPlayer 控件 + 休息中胶囊：跟随主题色板文字/强调色 ── */
+.song-rest-badge{background-color:rgba(15,23,42,.6);color:var(--theme-text,#fff)}
+.song-rest-dot{background-color:rgba(255,255,255,.85)}
+.song-rest-label{color:var(--theme-text,#fff)}
+.song-ctrl-btn{background-color:rgba(15,23,42,.6);color:var(--theme-text,#fff)}
+[data-theme=light] .song-rest-badge{background-color:rgba(255,255,255,.88);color:#0f172aeb!important}
+[data-theme=light] .song-rest-dot{background-color:#0f172ae0;border-color:#0f172a40!important}
+[data-theme=light] .song-rest-label{color:#0f172aeb}
+[data-theme=light] .song-ctrl-btn{background-color:rgba(255,255,255,.88);color:#0f172aeb!important}
+[data-theme=light] .song-ctrl-btn:hover{border-color:#0f172a40!important}.text-\[color\:var\(--theme-text\,#fff\)\]\{color:var(--theme-text,#fff)\}
