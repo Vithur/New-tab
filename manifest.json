@@ -56,9 +56,9 @@
     "newtab": "index.html"
   },
   "icons": {
-    "16": "images/logo.png",
-    "48": "images/logo.png",
-    "128": "images/logo.png"
+    "16": "images/icon-16.png",
+    "48": "images/icon-48.png",
+    "128": "images/icon-128.png"
   },
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'; base-uri 'self'; img-src 'self' data: https: http://192.168.1.42:* blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.jsdelivr.net data:; connect-src 'self' https: http://192.168.1.42:* http://localhost:* http://127.0.0.1:*; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://music.youtube.com https://open.spotify.com; media-src 'self' data: blob: https:;"
