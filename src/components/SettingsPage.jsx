@@ -1087,19 +1087,37 @@ const SongPlayerTab = ({
       </CardContainer>
 
       <CardContainer title="通用设置" description="音量与自动播放选项">
-        <div className="flex flex-col gap-3 pt-3 border-t border-white/10">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="text-white/90 text-xs font-gilroy-medium">默认音量</span>
-              <p className="text-white/50 text-[11px] font-gilroy-medium">控制视频播放与背景音频的音量</p>
+        <div className="flex flex-col gap-4 pt-3 border-t border-white/10">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-white/90 text-xs font-gilroy-medium">背景音量</span>
+                <p className="text-white/50 text-[11px] font-gilroy-medium">待机/休息时的背景音频音量</p>
+              </div>
+              <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 text-xs font-mono font-bold text-white">
+                {lofiVolume}%
+              </span>
             </div>
-            <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 text-xs font-mono font-bold text-white">
-              {lofiVolume}%
-            </span>
+            <input type="range" min="0" max="100" value={lofiVolume}
+              onChange={(e) => onLofiVolumeChange && onLofiVolumeChange(Number(e.target.value))}
+              className="w-full h-1.5 accent-[color:var(--accent)] cursor-pointer" />
           </div>
-          <input type="range" min="0" max="100" value={lofiVolume}
-            onChange={(e) => onLofiVolumeChange && onLofiVolumeChange(Number(e.target.value))}
-            className="w-full h-1.5 accent-[color:var(--accent)] cursor-pointer" />
+
+          <div className="flex flex-col gap-2 pt-3 border-t border-white/10">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-white/90 text-xs font-gilroy-medium">视频音量</span>
+                <p className="text-white/50 text-[11px] font-gilroy-medium">播放钢琴视频时的音量</p>
+              </div>
+              <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 text-xs font-mono font-bold text-white">
+                {pianoVolume}%
+              </span>
+            </div>
+            <input type="range" min="0" max="100" value={pianoVolume}
+              onChange={(e) => onPianoVolumeChange && onPianoVolumeChange(Number(e.target.value))}
+              className="w-full h-1.5 accent-[color:var(--accent)] cursor-pointer" />
+          </div>
+
 
           <div className="flex items-center justify-between pt-3 border-t border-white/10">
             <div>
@@ -2714,6 +2732,8 @@ const SettingsPage = (props) => {
                 onMusicSourcesChange={props.onMusicSourcesChange}
                 lofiVolume={props.lofiVolume}
                 onLofiVolumeChange={props.onLofiVolumeChange}
+                pianoVolume={props.pianoVolume}
+                onPianoVolumeChange={props.onPianoVolumeChange}
               />
             )}
 
