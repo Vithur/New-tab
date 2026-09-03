@@ -14,6 +14,64 @@ import {
 import { IconDropdownPopover } from "./IconPicker.jsx";
 import { TimeDropdownPopover } from "./TimePicker.jsx";
 import { CN_FONTS, cnFontStack } from "../utils/fonts";
+
+// 音量滑块样式：thumb 与已填充 track 都跟随 --accent（强调色）。
+// 内联 CSS 变量 --val 控制已填充进度（React inline style 设置）。
+const PIANO_RANGE_CSS = `
+.piano-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 0.375rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  outline: none;
+}
+.piano-range::-webkit-slider-runnable-track {
+  height: 0.375rem;
+  border-radius: 9999px;
+  background: linear-gradient(to right,
+    var(--accent) 0%,
+    var(--accent) var(--val, 0%),
+    rgba(255, 255, 255, 0.15) var(--val, 0%),
+    rgba(255, 255, 255, 0.15) 100%);
+}
+.piano-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -5px;
+  height: 0.875rem;
+  width: 0.875rem;
+  border-radius: 9999px;
+  background: var(--accent);
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+.piano-range::-webkit-slider-thumb:hover { transform: scale(1.08); }
+.piano-range::-moz-range-track {
+  height: 0.375rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.15);
+}
+.piano-range::-moz-range-progress {
+  height: 0.375rem;
+  border-radius: 9999px;
+  background: var(--accent);
+}
+.piano-range::-moz-range-thumb {
+  height: 0.875rem;
+  width: 0.875rem;
+  border-radius: 9999px;
+  background: var(--accent);
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+`;
+
 import {
   CAROUSEL_DIR_KEY,
   deleteHandle,
@@ -1088,6 +1146,7 @@ const SongPlayerTab = ({
       </CardContainer>
 
       <CardContainer title="通用设置" description="音量与自动播放选项">
+        <style>{PIANO_RANGE_CSS}</style>
         <div className="flex flex-col gap-4 pt-3 border-t border-white/10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
             <div className="flex flex-col gap-1.5">
@@ -1100,9 +1159,8 @@ const SongPlayerTab = ({
               <p className="text-white/50 text-[11px] font-gilroy-medium">待机/休息时的背景音频音量</p>
               <input type="range" min="0" max="100" value={lofiVolume}
                 onChange={(e) => onLofiVolumeChange && onLofiVolumeChange(Number(e.target.value))}
-                className="w-full h-1.5 mt-1 rounded-full appearance-none bg-white/15 cursor-pointer accent-[color:var(--accent)]
-                  [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[color:var(--accent)] [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer
-                  [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[color:var(--accent)] [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer" />
+                style={{ "--val": lofiVolume + "%" }}
+                className="piano-range mt-1" />
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -1115,9 +1173,8 @@ const SongPlayerTab = ({
               <p className="text-white/50 text-[11px] font-gilroy-medium">播放钢琴视频时的音量</p>
               <input type="range" min="0" max="100" value={pianoVolume}
                 onChange={(e) => onPianoVolumeChange && onPianoVolumeChange(Number(e.target.value))}
-                className="w-full h-1.5 mt-1 rounded-full appearance-none bg-white/15 cursor-pointer accent-[color:var(--accent)]
-                  [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[color:var(--accent)] [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer
-                  [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[color:var(--accent)] [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer" />
+                style={{ "--val": pianoVolume + "%" }}
+                className="piano-range mt-1" />
             </div>
           </div>
 
