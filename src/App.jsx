@@ -37,6 +37,7 @@ const STORAGE = {
   widgetEditMode: "settings_widget_edit_mode_v1",
   themeTextColorIndex: "settings_theme_text_color_idx_v1",
   uiTheme: STORAGE_KEY_UI_THEME,
+  uiThemeMode: "settings_ui_theme_mode_v1", // "auto" | "light" | "dark"
   baseFont: "settings_base_font_v1",
   baseFontSize: "settings_base_font_size_v1",
   themeColorsMap: "settings_theme_colors_map_v1",
@@ -182,7 +183,9 @@ const App = () => {
       ? DEFAULT_LAYOUT_SEED.themeColorsMap
       : DEFAULT_THEME_PALETTES
   );
-  const [themeTextColorIndex, setThemeTextColorIndex] = useState(0);
+  const [themeTextColorIndex, setThemeTextColorIndex] = useState(
+    Number.isInteger(DEFAULT_LAYOUT_SEED?.themeTextColorIndex) ? DEFAULT_LAYOUT_SEED.themeTextColorIndex : 0
+  );
   const [shortcuts, setShortcuts] = useState(DEFAULT_SHORTCUTS);
 
   // new state
@@ -193,14 +196,30 @@ const App = () => {
 
 
   const [songPlaylistUrl, setSongPlaylistUrl] = useState("");
-  const [songAutoPlay, setSongAutoPlay] = useState(true);
+  const [songAutoPlay, setSongAutoPlay] = useState(DEFAULT_LAYOUT_SEED?.songAutoPlay !== false);
   const [musicSources, setMusicSources] = useState(DEFAULT_MUSIC_SOURCES);
-  const [lofiVolume, setLofiVolume] = useState(20);
-  const [pianoVolume, setPianoVolume] = useState(20);
+  const [lofiVolume, setLofiVolume] = useState(
+    Number.isFinite(DEFAULT_LAYOUT_SEED?.lofiVolume) ? DEFAULT_LAYOUT_SEED.lofiVolume : 20
+  );
+  const [pianoVolume, setPianoVolume] = useState(
+    Number.isFinite(DEFAULT_LAYOUT_SEED?.pianoVolume) ? DEFAULT_LAYOUT_SEED.pianoVolume : 20
+  );
 
-  const [importantTabsConfig, setImportantTabsConfig] = useState(DEFAULT_IMPORTANT_TABS);
-  const [calendarSub, setCalendarSub] = useState({ feeds: DEFAULT_CALENDAR_FEEDS, intervalMin: 30, maxEvents: 8 });
-  const [rssConfig, setRssConfig] = useState({ feeds: DEFAULT_RSS_FEEDS, intervalMin: 30, maxItems: 8 });
+  const [importantTabsConfig, setImportantTabsConfig] = useState(
+    Array.isArray(DEFAULT_LAYOUT_SEED?.importantTabsConfig) && DEFAULT_LAYOUT_SEED.importantTabsConfig.length > 0
+      ? DEFAULT_LAYOUT_SEED.importantTabsConfig
+      : DEFAULT_IMPORTANT_TABS
+  );
+  const [calendarSub, setCalendarSub] = useState(
+    DEFAULT_LAYOUT_SEED?.calendarSub && Array.isArray(DEFAULT_LAYOUT_SEED.calendarSub.feeds)
+      ? { intervalMin: 30, maxEvents: 8, ...DEFAULT_LAYOUT_SEED.calendarSub }
+      : { feeds: DEFAULT_CALENDAR_FEEDS, intervalMin: 30, maxEvents: 8 }
+  );
+  const [rssConfig, setRssConfig] = useState(
+    DEFAULT_LAYOUT_SEED?.rssConfig && Array.isArray(DEFAULT_LAYOUT_SEED.rssConfig.feeds)
+      ? { intervalMin: 30, maxItems: 8, ...DEFAULT_LAYOUT_SEED.rssConfig }
+      : { feeds: DEFAULT_RSS_FEEDS, intervalMin: 30, maxItems: 8 }
+  );
   const [haConfig, setHaConfig] = useState({ baseUrl: "", token: "", entities: [], intervalSec: 30 });
   const [showHaWidget, setShowHaWidget] = useState(true);
   const [carouselConfig, setCarouselConfig] = useState({ links: [], jsonIndexUrl: "", intervalSec: 8, fadeMs: 600 });
@@ -209,8 +228,25 @@ const App = () => {
   const [uiTheme, setUiTheme] = useState(
     DEFAULT_LAYOUT_SEED?.uiTheme === "light" ? "light" : "default"
   );
-  const [baseFont, setBaseFont] = useState("Gilroy");
-  const [baseFontSize, setBaseFontSize] = useState(16);
+  // "auto" → 跟随系统（prefers-color-scheme）；"light"/"dark" → 手动锁定
+  const [uiThemeMode, setUiThemeMode] = useState(() => {
+    const seedMode = DEFAULT_LAYOUT_SEED?.uiThemeMode;
+    if (seedMode === "auto" || seedMode === "light" || seedMode === "dark") return seedMode;
+    return DEFAULT_LAYOUT_SEED?.uiTheme === "light" ? "light" : "dark";
+  });
+  const [systemPrefersLight, setSystemPrefersLight] = useState(() =>
+    typeof window !== "undefined" && typeof window.matchMedia === "function"
+      ? Boolean(window.matchMedia("(prefers-color-scheme: light)").matches)
+      : false
+  );
+  const [baseFont, setBaseFont] = useState(
+    typeof DEFAULT_LAYOUT_SEED?.baseFont === "string" && DEFAULT_LAYOUT_SEED.baseFont.trim()
+      ? DEFAULT_LAYOUT_SEED.baseFont
+      : "Gilroy"
+  );
+  const [baseFontSize, setBaseFontSize] = useState(
+    Number.isFinite(DEFAULT_LAYOUT_SEED?.baseFontSize) ? DEFAULT_LAYOUT_SEED.baseFontSize : 16
+  );
 
   const [isHydrated, setIsHydrated] = useState(false);
   const [isThemeChanging, setIsThemeChanging] = useState(false);
@@ -268,6 +304,7 @@ const App = () => {
         const storedWidgetEditMode = data[STORAGE.widgetEditMode];
         const storedThemeTextIdx = data[STORAGE.themeTextColorIndex];
         const storedUiTheme = data[STORAGE.uiTheme];
+        const storedUiThemeMode = data[STORAGE.uiThemeMode];
         const storedBaseFont = data[STORAGE.baseFont];
         const storedBaseFontSize = data[STORAGE.baseFontSize];
 
@@ -287,8 +324,22 @@ const App = () => {
         }
         setThemeColorsMap(activeThemeMap);
 
-        const currentUiTheme = (typeof storedUiTheme === "string" && ["default","light"].includes(storedUiTheme)) ? storedUiTheme : "default";
-        const activePalette = activeThemeMap[currentUiTheme] || DEFAULT_THEME_PALETTES[currentUiTheme] || DEFAULT_THEME_PALETTES.default;
+        // 主题模式优先级：用户存储的模式 > 种子默认值（auto）。
+        // 未存过模式的老用户升级后即为「跟随系统」，与本次需求一致。
+        const seedMode = ["auto", "light", "dark"].includes(DEFAULT_LAYOUT_SEED?.uiThemeMode)
+          ? DEFAULT_LAYOUT_SEED.uiThemeMode
+          : "auto";
+        const nextUiThemeMode =
+          storedUiThemeMode === "auto" || storedUiThemeMode === "light" || storedUiThemeMode === "dark"
+            ? storedUiThemeMode
+            : seedMode;
+        setUiThemeMode(nextUiThemeMode);
+        const effectiveUiTheme =
+          nextUiThemeMode === "auto"
+            ? (systemPrefersLight ? "light" : "default")
+            : (nextUiThemeMode === "light" ? "light" : "default");
+        const activePalette = activeThemeMap[effectiveUiTheme] || DEFAULT_THEME_PALETTES[effectiveUiTheme] || DEFAULT_THEME_PALETTES.default;
+        setUiTheme(effectiveUiTheme);
         setThemeColor(activePalette);
 
         if (typeof storedThemeTextIdx === "number" && storedThemeTextIdx >= 0 && storedThemeTextIdx <= 3) {
@@ -304,7 +355,7 @@ const App = () => {
           setActiveStep(storedActiveStepObj.step);
         if (storedHeroLayout === "left" || storedHeroLayout === "right") setHeroLayout(storedHeroLayout);
         } else {
-          setActiveStep("hero");
+          setActiveStep(DEFAULT_LAYOUT_SEED?.activeStep === "dashboard" ? "dashboard" : "hero");
         }
 
         if (typeof storedShowImpTabs === "boolean") setShowImportantTabs(storedShowImpTabs);
@@ -337,14 +388,14 @@ const App = () => {
           }
         }
         if (calendarNext) setCalendarSub(calendarNext);
-        else setCalendarSub({ feeds: DEFAULT_CALENDAR_FEEDS, intervalMin: 30, maxEvents: 8 });
+        else if (!Array.isArray(DEFAULT_LAYOUT_SEED?.calendarSub?.feeds)) setCalendarSub({ feeds: DEFAULT_CALENDAR_FEEDS, intervalMin: 30, maxEvents: 8 });
         if (storedRssConfig && typeof storedRssConfig === "object") {
           // 存储里没有订阅源时，补回默认 RSS
           const feeds = Array.isArray(storedRssConfig.feeds) && storedRssConfig.feeds.length > 0
             ? storedRssConfig.feeds
             : DEFAULT_RSS_FEEDS;
           setRssConfig({ intervalMin: 30, maxItems: 8, ...storedRssConfig, feeds });
-        } else {
+        } else if (!Array.isArray(DEFAULT_LAYOUT_SEED?.rssConfig?.feeds)) {
           setRssConfig({ feeds: DEFAULT_RSS_FEEDS, intervalMin: 30, maxItems: 8 });
         }
         if (storedHaConfig && typeof storedHaConfig === "object") {
@@ -361,7 +412,7 @@ const App = () => {
           try { parsedImpTabs = JSON.parse(storedImpTabsCfg); } catch { parsedImpTabs = null; }
         }
         if (Array.isArray(parsedImpTabs)) setImportantTabsConfig(parsedImpTabs);
-        if (typeof storedUiTheme === "string" && ["default","light"].includes(storedUiTheme)) setUiTheme(storedUiTheme);
+        // uiTheme 已由上方「主题模式」统一计算（auto 时跟随系统），此处不再单独覆盖
         if (typeof storedBaseFont === "string" && storedBaseFont.trim()) setBaseFont(storedBaseFont);
         if (typeof storedBaseFontSize === "number" && storedBaseFontSize >= 12 && storedBaseFontSize <= 24) setBaseFontSize(storedBaseFontSize);
 
@@ -409,6 +460,7 @@ const App = () => {
   useEffect(() => { if (!hydratedRef.current) return; storageSet(STORAGE.widgetEditMode, widgetEditMode); }, [widgetEditMode]);
   useEffect(() => { if (!hydratedRef.current) return; storageSet(STORAGE.themeTextColorIndex, themeTextColorIndex); }, [themeTextColorIndex]);
   useEffect(() => { if (!hydratedRef.current) return; storageSet(STORAGE.uiTheme, uiTheme); }, [uiTheme]);
+  useEffect(() => { if (!hydratedRef.current) return; storageSet(STORAGE.uiThemeMode, uiThemeMode); }, [uiThemeMode]);
   useEffect(() => { if (!hydratedRef.current) return; storageSet(STORAGE.baseFont, baseFont); }, [baseFont]);
   useEffect(() => { if (!hydratedRef.current) return; storageSet(STORAGE.baseFontSize, baseFontSize); }, [baseFontSize]);
 
@@ -443,6 +495,33 @@ const App = () => {
     document.documentElement.setAttribute("data-theme", uiTheme);
     return () => { document.documentElement.removeAttribute("data-theme"); };
   }, [uiTheme]);
+
+  /* ── 监听系统（OS）亮/暗主题偏好 ── */
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
+    const mq = window.matchMedia("(prefers-color-scheme: light)");
+    const syncSystemTheme = () => setSystemPrefersLight(Boolean(mq.matches));
+    syncSystemTheme();
+    if (typeof mq.addEventListener === "function") {
+      mq.addEventListener("change", syncSystemTheme);
+      return () => mq.removeEventListener("change", syncSystemTheme);
+    }
+    // Safari < 14 / 旧内核兜底
+    mq.addListener(syncSystemTheme);
+    return () => mq.removeListener(syncSystemTheme);
+  }, []);
+
+  /* ── 跟随系统：系统切到浅色→亮色主题，切到深色→暗色主题 ── */
+  useEffect(() => {
+    if (uiThemeMode !== "auto") return;
+    const targetTheme = systemPrefersLight ? "light" : "default";
+    setUiTheme(targetTheme);
+    const autoPalette =
+      (themeColorsMap && themeColorsMap[targetTheme]) ||
+      DEFAULT_THEME_PALETTES[targetTheme] ||
+      DEFAULT_THEME_PALETTES.default;
+    setThemeColor(autoPalette);
+  }, [uiThemeMode, systemPrefersLight, themeColorsMap]);
 
   /* ── Theme CSS variables ── */
   useEffect(() => {
@@ -552,7 +631,9 @@ const App = () => {
   };
 
   /* ── Smooth Theme & Wallpaper Transition Handlers ── */
+  // 手动选择具体主题 → 锁定为该模式（自动退出「跟随系统」）
   const handleUiThemeChange = (newTheme) => {
+    setUiThemeMode(newTheme === "light" ? "light" : "dark");
     if (newTheme === uiTheme) return;
     setIsThemeChanging(true);
     setUiTheme(newTheme);
@@ -560,6 +641,29 @@ const App = () => {
     const targetPalette =
       themeColorsMap[newTheme] ||
       DEFAULT_THEME_PALETTES[newTheme] ||
+      DEFAULT_THEME_PALETTES.default;
+    setThemeColor(targetPalette);
+
+    setTimeout(() => {
+      setIsThemeChanging(false);
+    }, 280);
+  };
+
+  // 主题模式：auto → 跟随系统亮/暗；light / dark → 手动锁定
+  const handleUiThemeModeChange = (mode) => {
+    if (mode !== "auto" && mode !== "light" && mode !== "dark") return;
+    setUiThemeMode(mode);
+    const targetTheme =
+      mode === "auto"
+        ? (systemPrefersLight ? "light" : "default")
+        : (mode === "light" ? "light" : "default");
+    if (targetTheme === uiTheme) return;
+    setIsThemeChanging(true);
+    setUiTheme(targetTheme);
+
+    const targetPalette =
+      themeColorsMap[targetTheme] ||
+      DEFAULT_THEME_PALETTES[targetTheme] ||
       DEFAULT_THEME_PALETTES.default;
     setThemeColor(targetPalette);
 
@@ -713,6 +817,9 @@ const App = () => {
           // UI Theme & Base Font
           uiTheme={uiTheme}
           onUiThemeChange={handleUiThemeChange}
+          uiThemeMode={uiThemeMode}
+          onUiThemeModeChange={handleUiThemeModeChange}
+          systemPrefersLight={systemPrefersLight}
           heroLayout={heroLayout}
           onHeroLayoutChange={setHeroLayout}
           baseFont={baseFont}
