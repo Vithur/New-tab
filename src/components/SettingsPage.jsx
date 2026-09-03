@@ -918,6 +918,7 @@ const SongPlayerTab = ({
   songAutoPlay, onSongAutoPlayChange,
   musicSources, onMusicSourcesChange,
   lofiVolume = 80, onLofiVolumeChange,
+  pianoVolume = 80, onPianoVolumeChange,
 }) => {
   const [videoDirName, setVideoDirName] = useState("");
   const [videoDirMsg, setVideoDirMsg] = useState("");
