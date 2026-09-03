@@ -607,6 +607,8 @@ const DashboardGrid = ({
   musicSources,
   lofiVolume = 80,
   onLofiVolumeChange,
+  pianoVolume = 80,
+  onPianoVolumeChange,
 }) => {
   const gridRef = useRef(null);
   const [deviceTier, setDeviceTier] = useState(() => getDeviceTier());
@@ -1098,7 +1100,7 @@ const DashboardGrid = ({
       case "importantTabs":
         return <ImportantTabs dragHandleProps={dragHandleProps} tabsConfig={importantTabsConfig} />;
       case "songPlayer":
-        return <SongPlayer dragHandleProps={dragHandleProps} musicSources={musicSources} autoPlay={songAutoPlay} volume={lofiVolume} onVolumeChange={onLofiVolumeChange} />;
+        return <SongPlayer dragHandleProps={dragHandleProps} musicSources={musicSources} autoPlay={songAutoPlay} volume={lofiVolume} onVolumeChange={onLofiVolumeChange} pianoVolume={pianoVolume} onPianoVolumeChange={onPianoVolumeChange} />;
       case "timeBoxing":
         return <CalendarWidget dragHandleProps={dragHandleProps} calendarSub={calendarSub} />;
       case "rssReader":
