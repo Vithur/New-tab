@@ -322,13 +322,21 @@ const SongPlayer = ({
     if (!isRadio) setTrackName(localTracks[localTrackIdx]?.name || "");
   }, [currentStreamUrl, isRadio, isPlaying]);
 
-  // 音量：实际音量取自 Settings(volume)；滑块改为静音待机音频。
+  // 音量：背景音量(volume) → 待机音频；视频音量(pianoVolume) → 钢琴视频。
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = Math.min(1, Math.max(0, Number(volume) / 100));
       audioRef.current.muted = standbyMuted;
     }
   }, [volume, standbyMuted]);
+
+  // 视频音量：控制钢琴视频（播放态）的音量；切到新视频后(pianoKey/pianoUrl 变化)重新应用。
+  useEffect(() => {
+    if (pianoVideoRef.current) {
+      pianoVideoRef.current.volume = Math.min(1, Math.max(0, Number(pianoVolume) / 100));
+      pianoVideoRef.current.muted = standbyMuted;
+    }
+  }, [pianoVolume, standbyMuted, pianoKey, pianoUrl, isPlaying]);
 
   // 曲名净化：去掉文件名末尾的 _1200/_1730/_2000 时段标记（仅文件命名用，UI 只显示曲名）
   const cleanSongName = (raw) => {
