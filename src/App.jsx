@@ -26,6 +26,7 @@ const STORAGE = {
   songAutoPlay: "settings_song_autoplay_v1",
   musicSources: "settings_music_sources_v1",
   lofiVolume: "settings_lofi_volume_v1",
+  pianoVolume: "settings_piano_volume_v1",
   importantTabsConfig: "settings_imp_tabs_config_v2",
   calendarSub: "settings_calendar_sub_v1",
   rssConfig: "settings_rss_config_v1",
@@ -195,6 +196,7 @@ const App = () => {
   const [songAutoPlay, setSongAutoPlay] = useState(true);
   const [musicSources, setMusicSources] = useState(DEFAULT_MUSIC_SOURCES);
   const [lofiVolume, setLofiVolume] = useState(20);
+  const [pianoVolume, setPianoVolume] = useState(80);
 
   const [importantTabsConfig, setImportantTabsConfig] = useState(DEFAULT_IMPORTANT_TABS);
   const [calendarSub, setCalendarSub] = useState({ feeds: DEFAULT_CALENDAR_FEEDS, intervalMin: 30, maxEvents: 8 });
@@ -255,6 +257,7 @@ const App = () => {
         const storedAutoPlay = data[STORAGE.songAutoPlay];
         const storedMusicSources = data[STORAGE.musicSources];
         const storedLofiVolume = data[STORAGE.lofiVolume];
+        const storedPianoVolume = data[STORAGE.pianoVolume];
         const storedImpTabsCfg = data[STORAGE.importantTabsConfig];
         const storedCalendarSub = data[STORAGE.calendarSub];
         const storedRssConfig = data[STORAGE.rssConfig];
@@ -315,6 +318,7 @@ const App = () => {
           setMusicSources(storedMusicSources.filter((s) => s?.type !== "radio"));
         }
         if (typeof storedLofiVolume === "number" && storedLofiVolume >= 0 && storedLofiVolume <= 100) setLofiVolume(storedLofiVolume);
+        if (typeof storedPianoVolume === "number" && storedPianoVolume >= 0 && storedPianoVolume <= 100) setPianoVolume(storedPianoVolume);
         // 兼容旧 {url, intervalMin, maxEvents}：转成新 {feeds:[...], intervalMin, maxEvents}
         const storedCalendar = storedCalendarSub;
         let calendarNext = null;
@@ -394,6 +398,7 @@ const App = () => {
   useEffect(() => { if (!hydratedRef.current) return; storageSet(STORAGE.songAutoPlay, songAutoPlay); }, [songAutoPlay]);
   useEffect(() => { if (!hydratedRef.current) return; storageSet(STORAGE.musicSources, musicSources); }, [musicSources]);
   useEffect(() => { if (!hydratedRef.current) return; storageSet(STORAGE.lofiVolume, lofiVolume); }, [lofiVolume]);
+  useEffect(() => { if (!hydratedRef.current) return; storageSet(STORAGE.pianoVolume, pianoVolume); }, [pianoVolume]);
   useEffect(() => { if (!hydratedRef.current) return; storageSet(STORAGE.importantTabsConfig, importantTabsConfig); }, [importantTabsConfig]);
   useEffect(() => { if (!hydratedRef.current) return; storageSet(STORAGE.calendarSub, calendarSub); }, [calendarSub]);
   useEffect(() => { if (!hydratedRef.current) return; storageSet(STORAGE.rssConfig, rssConfig); }, [rssConfig]);
@@ -667,6 +672,8 @@ const App = () => {
             musicSources={musicSources}
             lofiVolume={lofiVolume}
             onLofiVolumeChange={setLofiVolume}
+            pianoVolume={pianoVolume}
+            onPianoVolumeChange={setPianoVolume}
           />
         </div>
 
@@ -740,6 +747,8 @@ const App = () => {
           onMusicSourcesChange={setMusicSources}
           lofiVolume={lofiVolume}
           onLofiVolumeChange={setLofiVolume}
+          pianoVolume={pianoVolume}
+          onPianoVolumeChange={setPianoVolume}
           // Notepad
           showTodo={showTodo}
           onShowTodoChange={setShowTodo}
