@@ -2429,12 +2429,14 @@ const WidgetsTab = ({
 };
 
 /* ─── Backup & Data Management Tab Component ─── */
-const BackupTab = ({ uiTheme }) => {
+const BackupTab = ({ uiTheme, onRestoreDefaults }) => {
   const [statusMsg, setStatusMsg] = useState(null);
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [showConfirmReset, setShowConfirmReset] = useState(false);
+  const [isRestoringDefaults, setIsRestoringDefaults] = useState(false);
+  const [showConfirmRestoreDefaults, setShowConfirmRestoreDefaults] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleExport = async () => {
@@ -2510,6 +2512,26 @@ const BackupTab = ({ uiTheme }) => {
     } finally {
       setIsImporting(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const handleRestoreDefaults = async () => {
+    if (!onRestoreDefaults) return;
+    try {
+      setIsRestoringDefaults(true);
+      setStatusMsg(null);
+      await onRestoreDefaults();
+      setStatusMsg({
+        type: "success",
+        text: "内置默认数据已写回，仪表盘正在刷新…",
+      });
+    } catch (err) {
+      setStatusMsg({
+        type: "error",
+        text: "恢复默认数据失败：" + (err?.message || String(err)),
+      });
+      setIsRestoringDefaults(false);
+      setShowConfirmRestoreDefaults(false);
     }
   };
 
@@ -2629,6 +2651,57 @@ const BackupTab = ({ uiTheme }) => {
               <span>{isImporting ? "正在恢复…" : "恢复备份（.json）"}</span>
             </button>
           </div>
+        </div>
+      </CardContainer>
+
+      {/* 内置默认数据 Section */}
+      <CardContainer
+        title="恢复内置默认数据"
+        description="把扩展内置的默认数据（小组件布局、主题配色、字体、音量、标签页、订阅源、待办）写回并刷新。"
+      >
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-2xl bg-[color:var(--accent)]/20 border border-white/15 flex items-center justify-center text-[color:var(--theme-text,#fff)] text-lg shrink-0 shadow-inner">
+              <i className="ri-restart-line" />
+            </div>
+            <div>
+              <h4 className="text-white text-xs font-gilroy-bold">写入默认数据</h4>
+              <p className="text-white/50 text-[11px] font-gilroy-medium">
+                仅覆盖默认数据包含的字段；壁纸、本地音乐目录、HA 配置与缓存均保留。
+              </p>
+            </div>
+          </div>
+
+          {!showConfirmRestoreDefaults ? (
+            <button
+              type="button"
+              onClick={() => setShowConfirmRestoreDefaults(true)}
+              disabled={isRestoringDefaults}
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-gilroy-bold text-[color:var(--theme-text,#fff)] bg-[color:var(--accent)] hover:opacity-90 border border-white/20 transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95 shadow-md disabled:opacity-50"
+            >
+              <i className="ri-restart-line text-sm" />
+              <span>{isRestoringDefaults ? "正在写入…" : "恢复默认数据"}</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <button
+                type="button"
+                onClick={handleRestoreDefaults}
+                disabled={isRestoringDefaults}
+                className="px-4 py-2 rounded-xl text-xs font-gilroy-bold text-white bg-emerald-500/80 hover:bg-emerald-500 border border-emerald-300/40 transition-all cursor-pointer disabled:opacity-50"
+              >
+                {isRestoringDefaults ? "正在写入…" : "确认写入"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowConfirmRestoreDefaults(false)}
+                disabled={isRestoringDefaults}
+                className="px-4 py-2 rounded-xl text-xs font-gilroy-bold text-white/70 bg-white/10 hover:bg-white/20 border border-white/20 transition-all cursor-pointer disabled:opacity-50"
+              >
+                取消
+              </button>
+            </div>
+          )}
         </div>
       </CardContainer>
 
@@ -2870,7 +2943,7 @@ const SettingsPage = (props) => {
             )}
 
             {activeTab === "backup" && (
-              <BackupTab uiTheme={props.uiTheme} />
+              <BackupTab uiTheme={props.uiTheme} onRestoreDefaults={props.onRestoreDefaults} />
             )}
           </div>
         </main>
