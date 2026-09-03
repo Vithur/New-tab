@@ -15,62 +15,8 @@ import { IconDropdownPopover } from "./IconPicker.jsx";
 import { TimeDropdownPopover } from "./TimePicker.jsx";
 import { CN_FONTS, cnFontStack } from "../utils/fonts";
 
-// 音量滑块样式：thumb 与已填充 track 都跟随 --accent（强调色）。
-// 内联 CSS 变量 --val 控制已填充进度（React inline style 设置）。
-const PIANO_RANGE_CSS = `
-.piano-range {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 0.375rem;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.15);
-  cursor: pointer;
-  outline: none;
-}
-.piano-range::-webkit-slider-runnable-track {
-  height: 0.375rem;
-  border-radius: 9999px;
-  background: linear-gradient(to right,
-    var(--accent) 0%,
-    var(--accent) var(--val, 0%),
-    rgba(255, 255, 255, 0.15) var(--val, 0%),
-    rgba(255, 255, 255, 0.15) 100%);
-}
-.piano-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  margin-top: -5px;
-  height: 0.875rem;
-  width: 0.875rem;
-  border-radius: 9999px;
-  background: var(--accent);
-  border: 2px solid #ffffff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-  cursor: pointer;
-  transition: transform 0.12s ease;
-}
-.piano-range::-webkit-slider-thumb:hover { transform: scale(1.08); }
-.piano-range::-moz-range-track {
-  height: 0.375rem;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.15);
-}
-.piano-range::-moz-range-progress {
-  height: 0.375rem;
-  border-radius: 9999px;
-  background: var(--accent);
-}
-.piano-range::-moz-range-thumb {
-  height: 0.875rem;
-  width: 0.875rem;
-  border-radius: 9999px;
-  background: var(--accent);
-  border: 2px solid #ffffff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-  cursor: pointer;
-}
-`;
+// 状态点（thumb）跟强调色：用浏览器原生 accent-color 控制 input[type=range] 的 thumb
+// 与已填充 track 颜色——Chrome 93+ 自动支持，无需自定义伪元素 hack。
 
 import {
   CAROUSEL_DIR_KEY,
@@ -1146,45 +1092,50 @@ const SongPlayerTab = ({
       </CardContainer>
 
       <CardContainer title="通用设置" description="音量与自动播放选项">
-        <style>{PIANO_RANGE_CSS}</style>
-        <div className="flex flex-col gap-4 pt-3 border-t border-white/10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center justify-between">
-                <span className="text-white/90 text-xs font-gilroy-bold">背景音量</span>
-                <span className="px-2 py-0.5 rounded-full bg-white/15 border border-white/20 text-[10px] font-mono font-bold text-white tabular-nums">
-                  {lofiVolume}%
-                </span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-3 border-t border-white/10">
+          <div className="rounded-2xl bg-black/35 border border-white/10 hover:border-white/25 transition-all p-3.5 flex flex-col gap-2.5 shadow-sm">
+            <div className="flex items-center gap-2.5">
+              <div className="h-9 w-9 rounded-xl bg-[color:var(--accent)]/20 border border-white/15 flex items-center justify-center shrink-0 shadow-inner">
+                <i className="ri-volume-up-line text-sm text-white/85" />
               </div>
-              <p className="text-white/50 text-[11px] font-gilroy-medium">待机/休息时的背景音频音量</p>
-              <input type="range" min="0" max="100" value={lofiVolume}
-                onChange={(e) => onLofiVolumeChange && onLofiVolumeChange(Number(e.target.value))}
-                style={{ "--val": lofiVolume + "%" }}
-                className="piano-range mt-1" />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center justify-between">
-                <span className="text-white/90 text-xs font-gilroy-bold">视频音量</span>
-                <span className="px-2 py-0.5 rounded-full bg-white/15 border border-white/20 text-[10px] font-mono font-bold text-white tabular-nums">
-                  {pianoVolume}%
-                </span>
+              <div className="flex-1 min-w-0">
+                <div className="text-white text-sm font-gilroy-bold leading-tight">背景音量</div>
+                <div className="text-white/55 text-[11px] font-gilroy-medium leading-tight mt-0.5">待机/休息时的背景音频</div>
               </div>
-              <p className="text-white/50 text-[11px] font-gilroy-medium">播放钢琴视频时的音量</p>
-              <input type="range" min="0" max="100" value={pianoVolume}
-                onChange={(e) => onPianoVolumeChange && onPianoVolumeChange(Number(e.target.value))}
-                style={{ "--val": pianoVolume + "%" }}
-                className="piano-range mt-1" />
+              <span className="px-2 py-0.5 rounded-full bg-white/15 border border-white/20 text-[10px] font-mono font-bold text-white tabular-nums shrink-0">
+                {lofiVolume}%
+              </span>
             </div>
+            <input type="range" min="0" max="100" value={lofiVolume}
+              onChange={(e) => onLofiVolumeChange && onLofiVolumeChange(Number(e.target.value))}
+              className="w-full h-1.5 cursor-pointer accent-[color:var(--accent)]" />
           </div>
 
-          <div className="flex items-center justify-between pt-3 border-t border-white/10">
-            <div>
-              <span className="text-white/90 text-xs font-gilroy-medium">自动播放</span>
-              <p className="text-white/50 text-[11px] font-gilroy-medium">打开界面时自动开始播放</p>
+          <div className="rounded-2xl bg-black/35 border border-white/10 hover:border-white/25 transition-all p-3.5 flex flex-col gap-2.5 shadow-sm">
+            <div className="flex items-center gap-2.5">
+              <div className="h-9 w-9 rounded-xl bg-[color:var(--accent)]/20 border border-white/15 flex items-center justify-center shrink-0 shadow-inner">
+                <i className="ri-movie-line text-sm text-white/85" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-white text-sm font-gilroy-bold leading-tight">视频音量</div>
+                <div className="text-white/55 text-[11px] font-gilroy-medium leading-tight mt-0.5">播放钢琴视频时的音量</div>
+              </div>
+              <span className="px-2 py-0.5 rounded-full bg-white/15 border border-white/20 text-[10px] font-mono font-bold text-white tabular-nums shrink-0">
+                {pianoVolume}%
+              </span>
             </div>
-            <Toggle checked={songAutoPlay} onChange={onSongAutoPlayChange} />
+            <input type="range" min="0" max="100" value={pianoVolume}
+              onChange={(e) => onPianoVolumeChange && onPianoVolumeChange(Number(e.target.value))}
+              className="w-full h-1.5 cursor-pointer accent-[color:var(--accent)]" />
           </div>
+        </div>
+
+        <div className="flex items-center justify-between pt-3 mt-1 border-t border-white/10">
+          <div>
+            <span className="text-white/90 text-xs font-gilroy-medium">自动播放</span>
+            <p className="text-white/50 text-[11px] font-gilroy-medium">打开界面时自动开始播放</p>
+          </div>
+          <Toggle checked={songAutoPlay} onChange={onSongAutoPlayChange} />
         </div>
       </CardContainer>
     </div>
