@@ -656,52 +656,28 @@ const AppearanceTab = ({
       <CardContainer
         title="主题分区"
         description="选择完整的界面主题风格，切换背景、玻璃卡片、面板与排版。"
-      >
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* 跟随系统：根据操作系统亮/暗偏好自动切换主题 */}
-          <div
+        action={
+          <button
+            type="button"
             onClick={() => onUiThemeModeChange && onUiThemeModeChange("auto")}
-            className={`group rounded-2xl border transition-all duration-300 cursor-pointer overflow-hidden relative flex flex-col bg-black/40 shadow-lg ${
+            title="检测系统外观并自动切换主题"
+            className={`px-4 py-2 rounded-full text-xs font-gilroy-medium cursor-pointer transition-all active:scale-95 shadow-sm flex items-center gap-1.5 border whitespace-nowrap shrink-0 ${
               uiThemeMode === "auto"
-                ? "border-white ring-2 ring-white/50 scale-[1.02] shadow-2xl"
-                : "border-white/10 hover:border-white/30 hover:bg-black/60"
+                ? "bg-[color:var(--accent)] hover:brightness-110 border-white/30 text-[color:var(--theme-text,#fff)]"
+                : "bg-black/40 hover:bg-black/60 border-white/15 text-white/70 hover:text-white"
             }`}
           >
-            <div className="h-32 w-full overflow-hidden relative flex">
-              <img src={UI_THEMES[0]?.image} alt="" className="w-1/2 h-full object-cover" />
-              <img src={UI_THEMES[1]?.image} alt="" className="w-1/2 h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-              <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between z-10">
-                <div className="flex items-center gap-1.5 p-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20">
-                  <span
-                    className="h-3.5 w-3.5 rounded-full border border-white/40 shadow-sm"
-                    style={{ backgroundColor: themeColorsMap?.default?.[3] || "#121212" }}
-                  />
-                  <span
-                    className="h-3.5 w-3.5 rounded-full border border-white/40 shadow-sm"
-                    style={{ backgroundColor: themeColorsMap?.light?.[3] || "#F1F5F9" }}
-                  />
-                </div>
-                {uiThemeMode === "auto" && (
-                  <span className="px-2.5 py-1 rounded-full bg-[color:var(--accent)] text-[color:var(--theme-text,#fff)] text-[10px] font-gilroy-bold border border-white/30 uppercase tracking-wider shadow-md">
-                    当前主题
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="p-3.5 flex flex-col gap-1">
-              <div className="flex items-center gap-2">
-                <i className="ri-computer-line text-sm text-[color:var(--accent)]" />
-                <h4 className="text-white text-xs font-gilroy-bold group-hover:text-[color:var(--accent)] transition-colors">
-                  跟随系统
-                </h4>
-              </div>
-              <p className="text-white/50 text-[11px] font-gilroy-medium line-clamp-2">
-                检测系统外观并自动切换，当前系统为{systemPrefersLight ? "浅色" : "深色"}
-              </p>
-            </div>
-          </div>
-
+            <i className={`${uiThemeMode === "auto" ? "ri-computer-fill" : "ri-computer-line"} text-xs`} />
+            <span>跟随系统</span>
+            {uiThemeMode === "auto" && (
+              <span className="text-[10px] opacity-80 font-gilroy-medium hidden sm:inline">
+                · {systemPrefersLight ? "浅色" : "深色"}
+              </span>
+            )}
+          </button>
+        }
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {UI_THEMES.map((t) => {
             const isSelected = uiTheme === t.id && uiThemeMode !== "auto";
             return (
@@ -1368,7 +1344,7 @@ const RssTab = ({ rssConfig, onRssConfigChange }) => {
   const addFeed = () => {
     const url = urlDraft.trim();
     if (!url) return;
-    const name = nameDraft.trim() || (hostOfRss(url));
+    const name = nameDraft.trim() || (() => { try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return url; } })();
     update({ feeds: [...feeds, { id: `rss-${Date.now()}`, url, name, enabled: true }] });
     setUrlDraft("");
     setNameDraft("");
@@ -1528,14 +1504,6 @@ const RssTab = ({ rssConfig, onRssConfigChange }) => {
       </CardContainer>
     </div>
   );
-};
-
-const hostOfRss = (url) => {
-  try {
-    return new URL(url).hostname.replace(/^www\./, "");
-  } catch {
-    return url;
-  }
 };
 
 /* ─── TAB: Home Assistant ─── */
