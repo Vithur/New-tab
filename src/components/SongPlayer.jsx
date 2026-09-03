@@ -472,6 +472,7 @@ const SongPlayer = ({
                 ref={pianoVideoRef}
                 src={pianoUrl}
                 autoPlay
+                preload="auto"
                 muted={standbyMuted}
                 playsInline
                 onEnded={handlePianoEnded}
