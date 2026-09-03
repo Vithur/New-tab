@@ -659,8 +659,16 @@ const AppearanceTab = ({
         action={
           <button
             type="button"
-            onClick={() => onUiThemeModeChange && onUiThemeModeChange("auto")}
-            title="检测系统外观并自动切换主题"
+            onClick={() => {
+              if (uiThemeMode === "auto") {
+                // 已开启跟随 → 点击取消：锁定当前生效主题，不再随系统变化
+                onUiThemeChange && onUiThemeChange(uiTheme === "light" ? "light" : "default");
+              } else {
+                // 未开启 → 点击开启跟随系统
+                onUiThemeModeChange && onUiThemeModeChange("auto");
+              }
+            }}
+            title="点击切换：跟随系统外观 / 锁定当前主题"
             className={`px-4 py-2 rounded-full text-xs font-gilroy-medium cursor-pointer transition-all active:scale-95 shadow-sm flex items-center gap-1.5 border whitespace-nowrap shrink-0 ${
               uiThemeMode === "auto"
                 ? "bg-[color:var(--accent)] hover:brightness-110 border-white/30 text-[color:var(--theme-text,#fff)]"
@@ -669,11 +677,6 @@ const AppearanceTab = ({
           >
             <i className={`${uiThemeMode === "auto" ? "ri-computer-fill" : "ri-computer-line"} text-xs`} />
             <span>跟随系统</span>
-            {uiThemeMode === "auto" && (
-              <span className="text-[10px] opacity-80 font-gilroy-medium hidden sm:inline">
-                · {systemPrefersLight ? "浅色" : "深色"}
-              </span>
-            )}
           </button>
         }
       >
