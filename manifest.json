@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Project OS",
+  "name": "New tab",
   "version": "1.0.0",
-  "description": "Futuristic all-in-one customizable new tab workspace and productivity operating system.",
+  "description": "An all-in-one new tab workspace.",
   "browser_specific_settings": {
     "gecko": {
       "id": "project-os-workspace@antigravity",
