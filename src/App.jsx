@@ -269,7 +269,15 @@ const App = () => {
         // (so existing users keep their wallpaper on first load after update).
         const storedWallpaperByTheme = data[STORAGE.wallpaperByTheme];
         const storedWallpaperLegacy = data[STORAGE.wallpaper];
-        let nextWallpaperByTheme = { default: null, light: null };
+        // 无存储值时以种子（固化的默认数据）为底，而不是硬编码空值
+        const seedWallpaperByTheme =
+          DEFAULT_LAYOUT_SEED?.wallpaperByTheme && typeof DEFAULT_LAYOUT_SEED.wallpaperByTheme === "object"
+            ? {
+                default: DEFAULT_LAYOUT_SEED.wallpaperByTheme.default || null,
+                light: DEFAULT_LAYOUT_SEED.wallpaperByTheme.light || null,
+              }
+            : { default: null, light: null };
+        let nextWallpaperByTheme = seedWallpaperByTheme;
         if (storedWallpaperByTheme && typeof storedWallpaperByTheme === "object") {
           nextWallpaperByTheme = {
             default: storedWallpaperByTheme.default || null,
@@ -311,9 +319,15 @@ const App = () => {
         if (typeof storedShowTodo === "boolean") setShowTodo(storedShowTodo);
         if (typeof storedShowSongPlayer === "boolean") setShowSongPlayer(storedShowSongPlayer);
         const storedThemeColorsMap = data[STORAGE.themeColorsMap];
-        let activeThemeMap = { ...DEFAULT_THEME_PALETTES };
+        // 无存储值时以种子（固化的默认数据）为底，而不是硬编码调色板，
+        // 否则「恢复默认」会丢掉种子里的主题配色。
+        const seedThemeMap =
+          DEFAULT_LAYOUT_SEED?.themeColorsMap && typeof DEFAULT_LAYOUT_SEED.themeColorsMap === "object"
+            ? { ...DEFAULT_THEME_PALETTES, ...DEFAULT_LAYOUT_SEED.themeColorsMap }
+            : { ...DEFAULT_THEME_PALETTES };
+        let activeThemeMap = seedThemeMap;
         if (storedThemeColorsMap && typeof storedThemeColorsMap === "object") {
-          activeThemeMap = { ...DEFAULT_THEME_PALETTES, ...storedThemeColorsMap };
+          activeThemeMap = { ...seedThemeMap, ...storedThemeColorsMap };
         } else if (storedThemeColor) {
           if (Array.isArray(storedThemeColor) && storedThemeColor.length === 4) {
             activeThemeMap.default = storedThemeColor;
@@ -672,6 +686,47 @@ const App = () => {
     }, 280);
   };
 
+  /* ── 把固化的默认数据（src/data/default-layout.json）写回存储 ──
+     只覆盖种子里有的字段，不清空存储：壁纸、本地音乐目录、HA 配置、各类缓存均不受影响。 */
+  const handleRestoreDefaults = async () => {
+    const seed = DEFAULT_LAYOUT_SEED || {};
+    const writes = [
+      [STORAGE.wallpaperByTheme, seed.wallpaperByTheme && typeof seed.wallpaperByTheme === "object"
+        ? seed.wallpaperByTheme : { default: null, light: null }],
+      [STORAGE.themeColor, Array.isArray(seed.themeColor) && seed.themeColor.length === 4
+        ? seed.themeColor : DEFAULT_THEME_PALETTE],
+      [STORAGE.themeColorsMap, seed.themeColorsMap && typeof seed.themeColorsMap === "object"
+        ? seed.themeColorsMap : DEFAULT_THEME_PALETTES],
+      [STORAGE.themeTextColorIndex, Number.isInteger(seed.themeTextColorIndex) ? seed.themeTextColorIndex : 0],
+      [STORAGE.uiTheme, seed.uiTheme === "light" ? "light" : "default"],
+      [STORAGE.uiThemeMode, ["auto", "light", "dark"].includes(seed.uiThemeMode) ? seed.uiThemeMode : "auto"],
+      [STORAGE.baseFont, typeof seed.baseFont === "string" && seed.baseFont.trim() ? seed.baseFont : "Gilroy"],
+      [STORAGE.baseFontSize, Number.isFinite(seed.baseFontSize) ? seed.baseFontSize : 16],
+      [STORAGE.lofiVolume, Number.isFinite(seed.lofiVolume) ? seed.lofiVolume : 20],
+      [STORAGE.pianoVolume, Number.isFinite(seed.pianoVolume) ? seed.pianoVolume : 20],
+      [STORAGE.songAutoPlay, seed.songAutoPlay !== false],
+      [STORAGE.importantTabsConfig, Array.isArray(seed.importantTabsConfig) && seed.importantTabsConfig.length > 0
+        ? seed.importantTabsConfig : DEFAULT_IMPORTANT_TABS],
+      [STORAGE.calendarSub, seed.calendarSub && Array.isArray(seed.calendarSub.feeds)
+        ? { intervalMin: 30, maxEvents: 8, ...seed.calendarSub }
+        : { feeds: DEFAULT_CALENDAR_FEEDS, intervalMin: 30, maxEvents: 8 }],
+      [STORAGE.rssConfig, seed.rssConfig && Array.isArray(seed.rssConfig.feeds)
+        ? { intervalMin: 30, maxItems: 8, ...seed.rssConfig }
+        : { feeds: DEFAULT_RSS_FEEDS, intervalMin: 30, maxItems: 8 }],
+      [STORAGE.heroLayout, seed.heroLayout === "right" ? "right" : "left"],
+      [STORAGE.widgetEditMode, Boolean(seed.widgetEditMode)],
+      [STORAGE.activeStep, { step: seed.activeStep === "dashboard" ? "dashboard" : "hero", dateUtc: getTodayUtcDate() }],
+      ["todo_items_v2", Array.isArray(seed.todoItems) ? seed.todoItems : []],
+      ["settings_widget_positions_v7_desktop", seed.positions && typeof seed.positions === "object"
+        ? seed.positions : null],
+    ];
+    for (const [key, value] of writes) {
+      if (value === null || value === undefined) continue;
+      await storageSet(key, value);
+    }
+    if (typeof window !== "undefined") window.location.reload();
+  };
+
   const handleThemeColorChange = (newColors) => {
     setThemeColor(newColors);
     setThemeColorsMap((prev) => ({
@@ -820,6 +875,7 @@ const App = () => {
           uiThemeMode={uiThemeMode}
           onUiThemeModeChange={handleUiThemeModeChange}
           systemPrefersLight={systemPrefersLight}
+          onRestoreDefaults={handleRestoreDefaults}
           heroLayout={heroLayout}
           onHeroLayoutChange={setHeroLayout}
           baseFont={baseFont}
