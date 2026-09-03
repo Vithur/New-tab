@@ -1,23 +1,6 @@
 {
   "videos": [
     {
-      "name": "Croatian Rhapsody (克罗地亚狂想曲)",
-      "periods": {
-        "1200": {
-          "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/Croatian%20Rhapsody%20%28%E5%85%8B%E7%BD%97%E5%9C%B0%E4%BA%9A%E7%8B%82%E6%83%B3%E6%9B%B2%29_1200.mp4",
-          "size": 18554502
-        },
-        "1730": {
-          "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/Croatian%20Rhapsody%20%28%E5%85%8B%E7%BD%97%E5%9C%B0%E4%BA%9A%E7%8B%82%E6%83%B3%E6%9B%B2%29_1730.mp4",
-          "size": 18438129
-        },
-        "2000": {
-          "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/Croatian%20Rhapsody%20%28%E5%85%8B%E7%BD%97%E5%9C%B0%E4%BA%9A%E7%8B%82%E6%83%B3%E6%9B%B2%29_2000.mp4",
-          "size": 18264725
-        }
-      }
-    },
-    {
       "name": "Da Capo",
       "periods": {
         "1200": {
@@ -31,40 +14,6 @@
         "2000": {
           "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/Da%20Capo_2000.mp4",
           "size": 17245248
-        }
-      }
-    },
-    {
-      "name": "Lyphard Melody (星空的旋律)",
-      "periods": {
-        "1200": {
-          "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/Lyphard%20Melody%20%28%E6%98%9F%E7%A9%BA%E7%9A%84%E6%97%8B%E5%BE%8B%29_1200.mp4",
-          "size": 18310310
-        },
-        "1730": {
-          "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/Lyphard%20Melody%20%28%E6%98%9F%E7%A9%BA%E7%9A%84%E6%97%8B%E5%BE%8B%29_1730.mp4",
-          "size": 18171310
-        },
-        "2000": {
-          "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/Lyphard%20Melody%20%28%E6%98%9F%E7%A9%BA%E7%9A%84%E6%97%8B%E5%BE%8B%29_2000.mp4",
-          "size": 17810982
-        }
-      }
-    },
-    {
-      "name": "MoonHalo 《薪炎永燃》动画短片印象曲",
-      "periods": {
-        "1200": {
-          "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/MoonHalo%20%E3%80%8A%E8%96%AA%E7%82%8E%E6%B0%B8%E7%87%83%E3%80%8B%E5%8A%A8%E7%94%BB%E7%9F%AD%E7%89%87%E5%8D%B0%E8%B1%A1%E6%9B%B2_1200.mp4",
-          "size": 17738454
-        },
-        "1730": {
-          "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/MoonHalo%20%E3%80%8A%E8%96%AA%E7%82%8E%E6%B0%B8%E7%87%83%E3%80%8B%E5%8A%A8%E7%94%BB%E7%9F%AD%E7%89%87%E5%8D%B0%E8%B1%A1%E6%9B%B2_1730.mp4",
-          "size": 17477840
-        },
-        "2000": {
-          "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/MoonHalo%20%E3%80%8A%E8%96%AA%E7%82%8E%E6%B0%B8%E7%87%83%E3%80%8B%E5%8A%A8%E7%94%BB%E7%9F%AD%E7%89%87%E5%8D%B0%E8%B1%A1%E6%9B%B2_2000.mp4",
-          "size": 17189856
         }
       }
     },
@@ -99,23 +48,6 @@
         "2000": {
           "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/Where%20Did%20You%20Go_2000.mp4",
           "size": 17996553
-        }
-      }
-    },
-    {
-      "name": "两只老虎",
-      "periods": {
-        "1200": {
-          "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/%E4%B8%A4%E5%8F%AA%E8%80%81%E8%99%8E_1200.mp4",
-          "size": 18033576
-        },
-        "1730": {
-          "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/%E4%B8%A4%E5%8F%AA%E8%80%81%E8%99%8E_1730.mp4",
-          "size": 17940738
-        },
-        "2000": {
-          "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/%E4%B8%A4%E5%8F%AA%E8%80%81%E8%99%8E_2000.mp4",
-          "size": 17949567
         }
       }
     },
@@ -524,23 +456,6 @@
         "2000": {
           "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/%E6%9A%AE%E6%99%AF%E9%81%90%E6%80%9D_2000.mp4",
           "size": 18414183
-        }
-      }
-    },
-    {
-      "name": "未行之路 The Road Not Taken",
-      "periods": {
-        "1200": {
-          "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/%E6%9C%AA%E8%A1%8C%E4%B9%8B%E8%B7%AF%20The%20Road%20Not%20Taken_1200.mp4",
-          "size": 17610994
-        },
-        "1730": {
-          "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/%E6%9C%AA%E8%A1%8C%E4%B9%8B%E8%B7%AF%20The%20Road%20Not%20Taken_1730.mp4",
-          "size": 17385065
-        },
-        "2000": {
-          "url": "https://cdn.jsdelivr.net/gh/Vithur/Project-OS-Media@main/media/piano/%E6%9C%AA%E8%A1%8C%E4%B9%8B%E8%B7%AF%20The%20Road%20Not%20Taken_2000.mp4",
-          "size": 17067992
         }
       }
     },
