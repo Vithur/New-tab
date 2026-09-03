@@ -330,6 +330,12 @@ const SongPlayer = ({
     }
   }, [volume, standbyMuted]);
 
+  // 曲名净化：去掉文件名末尾的 _1200/_1730/_2000 时段标记（仅文件命名用，UI 只显示曲名）
+  const cleanSongName = (raw) => {
+    const n = (raw || "").toString().replace(/[_\s](?:1200|1730|2000)$/i, "").trim();
+    return n || "钢琴演奏";
+  };
+
   // 选一段钢琴视频：先随机选曲（尽量不连续重复），再按当前时段(1200/1730/2000)选对应版本
   // 兼容两种 manifest 格式：
   //   新格式 { name, periods:{"1200":{url,size},...} }
@@ -337,7 +343,7 @@ const SongPlayer = ({
   const pickPiano = useCallback(() => {
     if (pianoUrls.length === 0) { setPianoUrl(null); return; }
     let idx = Math.floor(Math.random() * pianoUrls.length);
-    if (pianoUrls.length > 1 && pianoUrls[idx]?.name === pianoName) {
+    if (pianoUrls.length > 1 && cleanSongName(pianoUrls[idx]?.name) === pianoName) {
       idx = (idx + 1) % pianoUrls.length;
     }
     const song = pianoUrls[idx] || {};
@@ -347,7 +353,7 @@ const SongPlayer = ({
       song.periods?.["1200"] ||
       (song.url ? { url: song.url } : null);
     setPianoUrl(variant?.url || null);
-    setPianoName(song.name || "钢琴演奏");
+    setPianoName(cleanSongName(song.name));
     setPianoKey((k) => k + 1);
   }, [pianoUrls, pianoName]);
 
