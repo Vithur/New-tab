@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<gupdate xmlns='http://www.google.com/update2/response' protocol='2.0'>
+  <!--
+    自托管 Chrome 扩展自动更新清单（AUM 协议）
+    使用说明：
+    1. 把 appid 改成你用固定密钥打包后得到的扩展 ID（chrome://extensions 打包时显示）。
+    2. codebase 改成你的 HTTPS 域名下 new-tab.crx 的真实地址。
+    3. version 改成当前最新版本号，每次发版都要比已装版本大。
+    4. 服务器把本文件以 Content-Type: application/xml 返回。
+  -->
+  <app appid='YOUR_EXTENSION_ID'>
+    <updatecheck
+      codebase='https://ext.你的域名.com/new-tab.crx'
+      version='1.0.0' />
+  </app>
+</gupdate>
