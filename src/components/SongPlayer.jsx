@@ -49,18 +49,10 @@ const SongPlayer = ({
   const [isPlaying, setIsPlaying] = useState(false);
   // 视频淡入淡出：待机↔钢琴 & 模式内换片 时切换慢淡出再淡入，画面不突兀。
   // opacity 0/1 由 transition-opacity duration-700 完成。
+  // 注意：下方控制淡出的 useEffect 必须放在 videoKey/pianoKey 声明之后，
+  // 否则依赖数组在首次渲染时读取尚未初始化的 const → TDZ 报错。
   const [mediaOpacity, setMediaOpacity] = useState(1);
   const mediaFirstMountRef = useRef(true);
-
-  useEffect(() => {
-    if (mediaFirstMountRef.current) {
-      mediaFirstMountRef.current = false;
-      return;
-    }
-    setMediaOpacity(0);
-    const t = setTimeout(() => setMediaOpacity(1), 320);
-    return () => clearTimeout(t);
-  }, [isPlaying, pianoKey, videoKey]);
 
   const [isBuffering, setIsBuffering] = useState(false);
   const [trackName, setTrackName] = useState("");
@@ -90,6 +82,18 @@ const SongPlayer = ({
   const [pianoKey, setPianoKey] = useState(0);
   const pianoVideoRef = useRef(null);
   const [standbyMuted, setStandbyMuted] = useState(false);
+
+  // 视频淡入淡出：待机↔钢琴 & 模式内换片 时切换慢淡出再淡入，画面不突兀。
+  // 此处（videoKey/pianoKey 均已声明）读取依赖数组安全，不会触发 TDZ。
+  useEffect(() => {
+    if (mediaFirstMountRef.current) {
+      mediaFirstMountRef.current = false;
+      return;
+    }
+    setMediaOpacity(0);
+    const t = setTimeout(() => setMediaOpacity(1), 320);
+    return () => clearTimeout(t);
+  }, [isPlaying, pianoKey, videoKey]);
 
   const audioRef = useRef(null);
 
