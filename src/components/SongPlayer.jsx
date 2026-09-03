@@ -47,6 +47,21 @@ const SongPlayer = ({
   const [sourceIndex, setSourceIndex] = useState(0);
   // isPlaying=true → 钢琴视频模式；false → 本地待机模式（待机动画 + 待机音频）
   const [isPlaying, setIsPlaying] = useState(false);
+  // 视频淡入淡出：待机↔钢琴 & 模式内换片 时切换慢淡出再淡入，画面不突兀。
+  // opacity 0/1 由 transition-opacity duration-700 完成。
+  const [mediaOpacity, setMediaOpacity] = useState(1);
+  const mediaFirstMountRef = useRef(true);
+
+  useEffect(() => {
+    if (mediaFirstMountRef.current) {
+      mediaFirstMountRef.current = false;
+      return;
+    }
+    setMediaOpacity(0);
+    const t = setTimeout(() => setMediaOpacity(1), 320);
+    return () => clearTimeout(t);
+  }, [isPlaying, pianoKey, videoKey]);
+
   const [isBuffering, setIsBuffering] = useState(false);
   const [trackName, setTrackName] = useState("");
 
@@ -464,59 +479,64 @@ const SongPlayer = ({
       </div>
 
       <div className="w-full flex-1 min-h-0 flex items-stretch gap-3 z-10 relative overflow-hidden">
-        <div className="flex-1 min-w-0 rounded-2xl overflow-hidden relative border border-white/15 bg-black/70 shadow-xl flex items-center justify-center group">
-          {isPlaying ? (
-            pianoUrl ? (
+        <div className="flex-1 min-w-0 rounded-2xl overflow-hidden relative border border-white/15 bg-black/70 shadow-xl group">
+          <div
+            className="absolute inset-0 transition-opacity duration-700 ease-out"
+            style={{ opacity: mediaOpacity }}
+          >
+            {isPlaying ? (
+              pianoUrl ? (
+                <video
+                  key={pianoKey}
+                  ref={pianoVideoRef}
+                  src={pianoUrl}
+                  autoPlay
+                  preload="auto"
+                  muted={standbyMuted}
+                  playsInline
+                  onEnded={handlePianoEnded}
+                  className="absolute inset-0 w-full h-full object-cover rounded-2xl"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+                  <p className="text-white/60 text-xs font-gilroy-medium">正在加载钢琴视频…</p>
+                </div>
+              )
+            ) : videoSrc ? (
               <video
-                key={pianoKey}
-                ref={pianoVideoRef}
-                src={pianoUrl}
+                key={videoKey}
+                ref={videoRef}
+                src={videoSrc}
                 autoPlay
-                preload="auto"
-                muted={standbyMuted}
+                muted
                 playsInline
-                onEnded={handlePianoEnded}
-                className="w-full h-full object-cover rounded-2xl"
+                loop={!hasVideoIndex}
+                onEnded={handleVideoEnded}
+                className="absolute inset-0 w-full h-full object-cover rounded-2xl"
               />
             ) : (
-              <div className="w-full h-full bg-black/70 flex items-center justify-center">
-                <p className="text-white/60 text-xs font-gilroy-medium">正在加载钢琴视频…</p>
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-900/60 via-cyan-950/50 to-slate-900/70 flex flex-col items-center justify-center p-3 relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0%,transparent_70%)]" />
+                <div className="flex items-end justify-center gap-1.5 mb-2.5 h-10 z-10">
+                  {[0, 100, 200, 75, 150].map((delay, i) => (
+                    <span
+                      key={i}
+                      className={`w-1.5 rounded-full transition-all duration-300 ${
+                        ["bg-purple-300", "bg-indigo-300", "bg-pink-300", "bg-cyan-300", "bg-purple-300"][i]
+                      } ${isPlaying ? `animate-pulse h-${[9,7,10,6,8][i]}` : "h-3 opacity-40"}`}
+                      style={isPlaying ? { animationDelay: `${delay}ms` } : undefined}
+                    />
+                  ))}
+                </div>
+                <div className="z-10 text-center px-2 max-w-full">
+                  <p className="text-white text-xs font-gilroy-bold truncate drop-shadow-md">{displayName}</p>
+                  <p className="text-white/50 text-[10px] font-gilroy-medium mt-0.5">
+                    {isBuffering ? "正在连接…" : isPlaying ? "正在播放" : "点击播放"}
+                  </p>
+                </div>
               </div>
-            )
-          ) : videoSrc ? (
-            <video
-              key={videoKey}
-              ref={videoRef}
-              src={videoSrc}
-              autoPlay
-              muted
-              playsInline
-              loop={!hasVideoIndex}
-              onEnded={handleVideoEnded}
-              className="w-full h-full object-cover rounded-2xl"
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-blue-900/60 via-cyan-950/50 to-slate-900/70 flex flex-col items-center justify-center p-3 relative overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0%,transparent_70%)]" />
-              <div className="flex items-end justify-center gap-1.5 mb-2.5 h-10 z-10">
-                {[0, 100, 200, 75, 150].map((delay, i) => (
-                  <span
-                    key={i}
-                    className={`w-1.5 rounded-full transition-all duration-300 ${
-                      ["bg-purple-300", "bg-indigo-300", "bg-pink-300", "bg-cyan-300", "bg-purple-300"][i]
-                    } ${isPlaying ? `animate-pulse h-${[9,7,10,6,8][i]}` : "h-3 opacity-40"}`}
-                    style={isPlaying ? { animationDelay: `${delay}ms` } : undefined}
-                  />
-                ))}
-              </div>
-              <div className="z-10 text-center px-2 max-w-full">
-                <p className="text-white text-xs font-gilroy-bold truncate drop-shadow-md">{displayName}</p>
-                <p className="text-white/50 text-[10px] font-gilroy-medium mt-0.5">
-                  {isBuffering ? "正在连接…" : isPlaying ? "正在播放" : "点击播放"}
-                </p>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         <div className="flex flex-col items-center justify-center gap-2.5 shrink-0">
