@@ -1,37 +1,39 @@
 {
   "positions": {
     "carousel": {
-      "col": 22,
+      "align": "right",
+      "col": 28,
       "cols": 4,
-      "row": 5,
+      "row": 6,
       "rows": 3
     },
     "haWidget": {
-      "col": 21,
+      "col": 27,
       "cols": 4,
-      "row": 8,
-      "rows": 2
+      "row": 9,
+      "rows": 3
     },
     "importantTabs": {
       "col": 1,
       "cols": 3,
-      "row": 4,
+      "row": 5,
       "rows": 3
     },
     "rssReader": {
-      "col": 21,
+      "col": 27,
       "cols": 4,
       "row": 3,
-      "rows": 2
+      "rows": 3
     },
     "songPlayer": {
       "col": 1,
       "cols": 6,
       "row": 1,
-      "rows": 3
+      "rows": 4
     },
     "timeBoxing": {
-      "col": 22,
+      "align": "right",
+      "col": 28,
       "cols": 4,
       "row": 1,
       "rows": 2
@@ -39,31 +41,223 @@
     "todo": {
       "col": 4,
       "cols": 3,
-      "row": 5,
+      "row": 6,
       "rows": 3
     }
   },
   "heroLayout": "left",
   "widgetEditMode": true,
+  "activeStep": "dashboard",
   "themeColorsMap": {
     "default": [
-      "#CBD5E1",
-      "#64748B",
-      "#334155",
-      "#0F172A"
+      "#dbdbdb",
+      "#0EA5E9",
+      "#303030",
+      "#121212"
     ],
     "light": [
-      "#1E293B",
-      "#334155",
-      "#2563EB",
-      "#F1F5F9"
+      "#7DD3FC",
+      "#0EA5E9",
+      "#0369A1",
+      "#0C4A6E"
     ]
   },
   "themeColor": [
-    "#1E293B",
-    "#334155",
-    "#2563EB",
-    "#F1F5F9"
+    "#dbdbdb",
+    "#0EA5E9",
+    "#303030",
+    "#121212"
   ],
-  "uiTheme": "light"
+  "themeTextColorIndex": 0,
+  "uiTheme": "default",
+  "uiThemeMode": "auto",
+  "wallpaperByTheme": {
+    "default": null,
+    "light": null
+  },
+  "baseFont": "思源黑体",
+  "baseFontSize": 16,
+  "lofiVolume": 20,
+  "pianoVolume": 30,
+  "songAutoPlay": true,
+  "importantTabsConfig": [
+    {
+      "iconClass": "ri-film-line",
+      "id": "tab-yingyin",
+      "links": [
+        {
+          "id": "link-yingyin-quark",
+          "label": "夸克",
+          "url": "http://192.168.1.42:5007/"
+        },
+        {
+          "id": "link-yingyin-subhd",
+          "label": "SubHD",
+          "url": "https://subhd.tv/"
+        },
+        {
+          "id": "link-yingyin-douban",
+          "label": "豆瓣电影",
+          "url": "https://movie.douban.com/"
+        },
+        {
+          "id": "link-yingyin-qbit",
+          "label": "qBittorrent",
+          "url": "http://192.168.1.42:8080/#/"
+        }
+      ],
+      "title": "影音"
+    },
+    {
+      "iconClass": "ri-palette-line",
+      "id": "tab-sheji",
+      "links": [
+        {
+          "id": "link-sheji-huaban",
+          "label": "花瓣",
+          "url": "https://huaban.com/follow"
+        },
+        {
+          "id": "link-sheji-behance",
+          "label": "Behance",
+          "url": "https://www.behance.net/galleries/graphic-design"
+        },
+        {
+          "id": "link-sheji-artstation",
+          "label": "ArtStation",
+          "url": "https://www.artstation.com/"
+        }
+      ],
+      "title": "设计"
+    },
+    {
+      "iconClass": "ri-robot-line",
+      "id": "tab-zhineng",
+      "links": [
+        {
+          "id": "link-zhineng-perplexity",
+          "label": "Perplexity",
+          "url": "https://www.perplexity.ai/"
+        },
+        {
+          "id": "link-zhineng-grok",
+          "label": "Grok",
+          "url": "https://grok.com/"
+        },
+        {
+          "id": "link-zhineng-gemini",
+          "label": "Gemini",
+          "url": "https://gemini.google.com/app"
+        }
+      ],
+      "title": "智能"
+    },
+    {
+      "iconClass": "ri-newspaper-line",
+      "id": "tab-zixun",
+      "links": [
+        {
+          "id": "link-zixun-github",
+          "label": "GitHub Trending",
+          "url": "https://github.com/trending?since=daily"
+        },
+        {
+          "id": "link-zixun-goodcase",
+          "label": "GoodCase",
+          "url": "https://goodcase.ai/#rankings"
+        },
+        {
+          "id": "link-zixun-huggingface",
+          "label": "Hugging Face",
+          "url": "https://huggingface.co/"
+        }
+      ],
+      "title": "资讯"
+    },
+    {
+      "iconClass": "ri-gamepad-line",
+      "id": "tab-youxi",
+      "links": [
+        {
+          "id": "link-youxi-nexus",
+          "label": "Nexus",
+          "url": "https://www.nexusmods.com/"
+        },
+        {
+          "id": "link-youxi-fling",
+          "label": "FLiNG Trainer",
+          "url": "https://flingtrainer.com/category/trainer/"
+        },
+        {
+          "id": "link-youxi-anheihe",
+          "label": "暗黑核",
+          "url": "https://www.d2core.com/d4/builds"
+        }
+      ],
+      "title": "游戏"
+    },
+    {
+      "iconClass": "ri-apps-line",
+      "id": "tab-ruanjian",
+      "links": [
+        {
+          "id": "link-ruanjian-ziyuan",
+          "label": "资源荟萃",
+          "url": "https://linux.do/tags/c/resource/14/%E5%A4%B8%E5%85%8B%E7%BD%91%E7%9B%98"
+        },
+        {
+          "id": "link-ruanjian-guoke",
+          "label": "果核剥壳",
+          "url": "https://www.ghxi.com/category/all/pcsoft"
+        },
+        {
+          "id": "link-ruanjian-macosicon",
+          "label": "macOS Icons",
+          "url": "https://macosicons.com/#/"
+        }
+      ],
+      "title": "软件"
+    }
+  ],
+  "calendarSub": {
+    "feeds": [
+      {
+        "enabled": true,
+        "id": "cal-mihomo",
+        "name": "番剧日历",
+        "url": "https://raw.githubusercontent.com/Vithur/mihomo/main/caldav.ics"
+      }
+    ],
+    "intervalMin": 30,
+    "maxEvents": 8
+  },
+  "rssConfig": {
+    "feeds": [
+      {
+        "enabled": true,
+        "id": "aihot-virxact",
+        "name": "AI Hot",
+        "url": "https://aihot.virxact.com/feed.xml"
+      }
+    ],
+    "intervalMin": 30,
+    "maxItems": 8
+  },
+  "todoItems": [
+    {
+      "id": "demo-1",
+      "text": "欢迎使用 New Tab！👋",
+      "done": true
+    },
+    {
+      "id": "demo-2",
+      "text": "在设置中自定义壁纸与主题",
+      "done": true
+    },
+    {
+      "id": "demo-4",
+      "text": "添加你常用的网站链接",
+      "done": false
+    }
+  ]
 }
