@@ -567,15 +567,15 @@ const AppearanceTab = ({
             {/* Hover overlay hint */}
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-1.5 text-white z-10 backdrop-blur-[2px] pointer-events-none">
               <i className="ri-drag-drop-line text-3xl" />
-              <p className="text-xs font-gilroy-bold">Drag & Drop Image or Link Here</p>
-              <span className="text-[10px] text-white/70 font-gilroy-medium">or click to browse files</span>
+              <p className="text-xs font-gilroy-bold">拖放图片或链接到此处</p>
+              <span className="text-[10px] text-white/70 font-gilroy-medium">或点击浏览文件</span>
             </div>
 
             {/* Drag active overlay */}
             {isDraggingOver && (
               <div className="absolute inset-0 bg-black/80 backdrop-blur-md z-30 flex flex-col items-center justify-center gap-2 text-white animate-fade-in pointer-events-none">
                 <i className="ri-upload-cloud-2-line text-4xl text-[color:var(--accent)] animate-bounce" />
-                <p className="text-sm font-gilroy-bold">Drop Image or Link to Set Wallpaper</p>
+                <p className="text-sm font-gilroy-bold">拖放图片或链接以设置壁纸</p>
               </div>
             )}
 
@@ -583,13 +583,13 @@ const AppearanceTab = ({
             {isProcessing && (
               <div className="absolute inset-0 bg-black/80 backdrop-blur-md z-30 flex flex-col items-center justify-center gap-2 text-white pointer-events-none">
                 <i className="ri-loader-4-line text-3xl animate-spin text-[color:var(--accent)]" />
-                <p className="text-xs font-gilroy-medium">Processing Image...</p>
+                <p className="text-xs font-gilroy-medium">正在处理图片…</p>
               </div>
             )}
 
             {/* Label badge */}
             <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 text-xs text-white font-gilroy-medium shadow-md z-20 pointer-events-none">
-              {wallpaper ? wallpaper.name || "自定义壁纸" : "Default Wallpaper"}
+              {wallpaper ? wallpaper.name || "自定义壁纸" : "默认壁纸"}
             </div>
           </div>
 
