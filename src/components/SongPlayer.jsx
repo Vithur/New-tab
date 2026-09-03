@@ -41,6 +41,8 @@ const SongPlayer = ({
   autoPlay,
   volume = 80,
   onVolumeChange,
+  pianoVolume = 80,
+  onPianoVolumeChange,
 }) => {
   const [sourceIndex, setSourceIndex] = useState(0);
   // isPlaying=true → 钢琴视频模式；false → 本地待机模式（待机动画 + 待机音频）
