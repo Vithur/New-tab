@@ -6,6 +6,7 @@ const STORAGE = {
 };
 
 import { storageGet, storageSet } from "../utils/storage.js";
+import DEFAULT_LAYOUT_SEED from "../data/default-layout.json";
 import {
   WIDGET_SHELL,
   WIDGET_HEADER,
@@ -20,13 +21,19 @@ const makeId = () => {
   return String(Date.now() + Math.random());
 };
 
-const DEFAULT_DEMO_TASKS = [
-  { id: "demo-1", text: "欢迎使用 Project OS！👋", done: true },
+const FALLBACK_TASKS = [
+  { id: "demo-1", text: "欢迎使用 New Tab！👋", done: true },
   { id: "demo-2", text: "在设置中自定义壁纸与主题", done: true },
   { id: "demo-3", text: "在时间规划中安排今日日程", done: false },
   { id: "demo-4", text: "添加你常用的网站链接", done: false },
   { id: "demo-5", text: "达成每日饮水目标 💧", done: false },
 ];
+
+// 默认数据取自 src/data/default-layout.json（导出/备份固化的种子）
+const DEFAULT_DEMO_TASKS =
+  Array.isArray(DEFAULT_LAYOUT_SEED?.todoItems) && DEFAULT_LAYOUT_SEED.todoItems.length > 0
+    ? DEFAULT_LAYOUT_SEED.todoItems
+    : FALLBACK_TASKS;
 
 const Todo = ({ dragHandleProps }) => {
   const [tasks, setTasks] = useState([]);
