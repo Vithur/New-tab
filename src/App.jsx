@@ -196,7 +196,7 @@ const App = () => {
   const [songAutoPlay, setSongAutoPlay] = useState(true);
   const [musicSources, setMusicSources] = useState(DEFAULT_MUSIC_SOURCES);
   const [lofiVolume, setLofiVolume] = useState(20);
-  const [pianoVolume, setPianoVolume] = useState(80);
+  const [pianoVolume, setPianoVolume] = useState(20);
 
   const [importantTabsConfig, setImportantTabsConfig] = useState(DEFAULT_IMPORTANT_TABS);
   const [calendarSub, setCalendarSub] = useState({ feeds: DEFAULT_CALENDAR_FEEDS, intervalMin: 30, maxEvents: 8 });
