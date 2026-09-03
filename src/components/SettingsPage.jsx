@@ -1089,36 +1089,37 @@ const SongPlayerTab = ({
 
       <CardContainer title="通用设置" description="音量与自动播放选项">
         <div className="flex flex-col gap-4 pt-3 border-t border-white/10">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-white/90 text-xs font-gilroy-medium">背景音量</span>
-                <p className="text-white/50 text-[11px] font-gilroy-medium">待机/休息时的背景音频音量</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-white/90 text-xs font-gilroy-bold">背景音量</span>
+                <span className="px-2 py-0.5 rounded-full bg-white/15 border border-white/20 text-[10px] font-mono font-bold text-white tabular-nums">
+                  {lofiVolume}%
+                </span>
               </div>
-              <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 text-xs font-mono font-bold text-white">
-                {lofiVolume}%
-              </span>
+              <p className="text-white/50 text-[11px] font-gilroy-medium">待机/休息时的背景音频音量</p>
+              <input type="range" min="0" max="100" value={lofiVolume}
+                onChange={(e) => onLofiVolumeChange && onLofiVolumeChange(Number(e.target.value))}
+                className="w-full h-1.5 mt-1 rounded-full appearance-none bg-white/15 cursor-pointer accent-[color:var(--accent)]
+                  [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[color:var(--accent)] [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer
+                  [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[color:var(--accent)] [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer" />
             </div>
-            <input type="range" min="0" max="100" value={lofiVolume}
-              onChange={(e) => onLofiVolumeChange && onLofiVolumeChange(Number(e.target.value))}
-              className="w-full h-1.5 accent-[color:var(--accent)] cursor-pointer" />
-          </div>
 
-          <div className="flex flex-col gap-2 pt-3 border-t border-white/10">
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-white/90 text-xs font-gilroy-medium">视频音量</span>
-                <p className="text-white/50 text-[11px] font-gilroy-medium">播放钢琴视频时的音量</p>
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-white/90 text-xs font-gilroy-bold">视频音量</span>
+                <span className="px-2 py-0.5 rounded-full bg-white/15 border border-white/20 text-[10px] font-mono font-bold text-white tabular-nums">
+                  {pianoVolume}%
+                </span>
               </div>
-              <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 text-xs font-mono font-bold text-white">
-                {pianoVolume}%
-              </span>
+              <p className="text-white/50 text-[11px] font-gilroy-medium">播放钢琴视频时的音量</p>
+              <input type="range" min="0" max="100" value={pianoVolume}
+                onChange={(e) => onPianoVolumeChange && onPianoVolumeChange(Number(e.target.value))}
+                className="w-full h-1.5 mt-1 rounded-full appearance-none bg-white/15 cursor-pointer accent-[color:var(--accent)]
+                  [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[color:var(--accent)] [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer
+                  [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[color:var(--accent)] [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer" />
             </div>
-            <input type="range" min="0" max="100" value={pianoVolume}
-              onChange={(e) => onPianoVolumeChange && onPianoVolumeChange(Number(e.target.value))}
-              className="w-full h-1.5 accent-[color:var(--accent)] cursor-pointer" />
           </div>
-
 
           <div className="flex items-center justify-between pt-3 border-t border-white/10">
             <div>
